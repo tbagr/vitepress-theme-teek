@@ -33,3 +33,7 @@ catalogs:
     # "@vue/reactivity": ^3.5.32
     # "@vue/runtime-core": ^3.5.32
     # "@vue/runtime-dom": ^3.5.32
+
+onlyBuiltDependencies:
+  - esbuild
+  - '@parcel/watcher'
