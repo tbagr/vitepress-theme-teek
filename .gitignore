@@ -29,3 +29,5 @@ coverage
 *.sw?
 
 /**/.vitepress/cache/*
+
+.omo/*
