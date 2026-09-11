@@ -13,10 +13,10 @@ const description = [
   "Teek 拥有三种典型的知识管理形态：结构化、碎片化、体系化，可以轻松构建一个结构化知识库，适用个人博客、文档站、知识库等场景",
 ].toString();
 
-// https://vitepress.dev/reference/site-config
+// https://vitepress.dev/reference/site-config​
 export default defineConfig({
   extends: teekConfig,
-  title: "Vitepress Theme Teek",
+  title: "芙宁娜西妲 的世界​​",
   description: description,
   cleanUrls: false,
   lastUpdated: true,
@@ -26,7 +26,7 @@ export default defineConfig({
     ["link", { rel: "icon", type: "image/png", href: "/teek-logo-mini.png" }],
     ["meta", { property: "og:type", content: "website" }],
     ["meta", { property: "og:locale", content: "zh-CN" }],
-    ["meta", { property: "og:title", content: "Teek | Vitepress Theme Teek" }],
+    ["meta", { property: "og:title", content: "Tbagr | 芙宁娜西妲 的世界" }],
     ["meta", { property: "og:site_name", content: "VitePress Theme Teek" }],
     ["meta", { property: "og:image", content: "https://vp.teek.top/teek-logo-large.png" }],
     ["meta", { property: "og:url", content: "https://vp.teek.top" }],
