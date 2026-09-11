@@ -82,5 +82,17 @@
     "vdoing",
     "umami",
     "vercount"
-  ]
+  ],
+  "i18n-ally.localesPaths": ["packages/locale/lang"],
+  "i18n-ally.pathMatcher": "{locale}.ts",
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sourceLanguage": "zh-cn",
+  "i18n-ally.displayLanguage": "zh-cn",
+  "i18n-ally.enabledParsers": ["ts", "json", "yaml"],
+  "i18n-ally.annotations": true,
+  "i18n-ally.parsers.typescript.compilerOptions": {
+    "target": "ES2020",
+    "ignoreDeprecations": "6.0",
+    "rootDir": "c:/"
+  }
 }
