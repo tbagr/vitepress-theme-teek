@@ -8,7 +8,7 @@ import { version } from "../../packages/teek/version";
 // import { version } from "vitepress-theme-teek/es/version";
 
 const description = [
-  "欢迎来到 vitepress-theme-teek 使用文档",
+  "欢迎来到 芙宁娜西妲 的世界",
   "Teek 是一个基于 VitePress 构建的主题，是在默认主题的基础上进行拓展，支持 VitePress 的所有功能、配置",
   "Teek 拥有三种典型的知识管理形态：结构化、碎片化、体系化，可以轻松构建一个结构化知识库，适用个人博客、文档站、知识库等场景",
 ].toString();
@@ -28,8 +28,8 @@ export default defineConfig({
     ["meta", { property: "og:locale", content: "zh-CN" }],
     ["meta", { property: "og:title", content: "Tbagr | 芙宁娜西妲 的世界" }],
     ["meta", { property: "og:site_name", content: "VitePress Theme Teek" }],
-    ["meta", { property: "og:image", content: "https://vp.teek.top/teek-logo-large.png" }],
-    ["meta", { property: "og:url", content: "https://vp.teek.top" }],
+    ["meta", { property: "og:image", content: "https://tbagr.com/teek-logo-large.png" }],
+    ["meta", { property: "og:url", content: "https://tbagr.com" }],
     ["meta", { property: "og:description", description }],
     ["meta", { name: "description", description }],
     ["meta", { name: "author", content: "Teeker" }],
@@ -68,7 +68,7 @@ export default defineConfig({
     },
   },
   sitemap: {
-    hostname: "https://vp.teek.top",
+    hostname: "https://tbagr.com",
     transformItems: items => {
       const permalinkItemBak: typeof items = [];
       // 使用永久链接生成 sitemap
@@ -128,7 +128,7 @@ export default defineConfig({
           { text: "归档页", link: "/archives" },
           { text: "清单页", link: "/articleOverview" },
           { text: "登录页", link: "/login" },
-          { text: "风险链接提示页", link: "/risk-link?target=https://vp.teek.top" },
+          { text: "风险链接提示页", link: "/risk-link?target=https://tbagr.com" },
           { text: "分类页", link: "/categories" },
           { text: "标签页", link: "/tags" },
         ],

@@ -26,7 +26,7 @@ provide(teekConfigContext, {
   comment: {
     options: {
       // artalk 配置，官网：https://artalk.js.org/
-      server: "https://vp.teek.top",
+      server: "https://tbagr.com",
       site: "Teek Site",
     },
   },
@@ -74,7 +74,7 @@ export default {
         comment: {
           options: {
             // artalk 配置，官网：https://artalk.js.org/
-            server: "https://vp.teek.top",
+            server: "https://tbagr.com",
             site: "Teek Site",
           },
         },

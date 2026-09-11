@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[Github](https://github.com/Kele-Bingtang/vitepress-theme-teek) ｜ [Gitee](https://gitee.com/kele-bingtang/vitepress-theme-teek) ｜ [Preview](https://notes.teek.top/) ｜[Docs](http://vp.teek.top/)
+[Github](https://github.com/Kele-Bingtang/vitepress-theme-teek) ｜ [Gitee](https://gitee.com/kele-bingtang/vitepress-theme-teek) ｜ [Preview](https://notes.teek.top/) ｜[Docs](http://tbagr.com/)
 
 ✨ A lightweight, concise and efficient, flexibly configured, and easily extensible VitePress theme.
 
@@ -33,11 +33,11 @@
 
 ## Teek Online Installation
 
-Please see [Quick Start](https://vp.teek.top/guide/quickstart).
+Please see [Quick Start](https://tbagr.com/guide/quickstart).
 
 ## Contribution Guide
 
-Please see [Contribution Guide](https://vp.teek.top/guide/contribution).
+Please see [Contribution Guide](https://tbagr.com/guide/contribution).
 
 ## Local Development
 
@@ -67,7 +67,7 @@ pnpm docs:dev
 
 ## Effect Images
 
-Only some effect images are listed below. For more features, please visit [Official Documentation](https://vp.teek.top)
+Only some effect images are listed below. For more features, please visit [Official Documentation](https://tbagr.com)
 
 ### Document Homepage
 
@@ -121,7 +121,7 @@ Your sponsorship will help Teek:
 - Provide better technical support
 - Develop more practical features
 
-QR codes not displaying properly? Click [here](https://vp.teek.top/personal.html) 😎
+QR codes not displaying properly? Click [here](https://tbagr.com/personal.html) 😎
 
 ## Acknowledgements
 

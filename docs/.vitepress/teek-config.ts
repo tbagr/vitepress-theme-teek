@@ -102,9 +102,9 @@ export const teekConfig = defineTeekConfig({
     {
       title: "外部链接",
       links: [
-        { name: "示例 1", link: "https://vp.teek.top" },
-        { name: "示例 2", link: "https://vp.teek.top" },
-        { name: "示例 3", link: "https://vp.teek.top" },
+        { name: "示例 1", link: "https://tbagr.com" },
+        { name: "示例 2", link: "https://tbagr.com" },
+        { name: "示例 3", link: "https://tbagr.com" },
       ],
     },
     {

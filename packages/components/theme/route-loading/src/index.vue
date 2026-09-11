@@ -74,7 +74,7 @@ onContentUpdated(handleRouteComplete);
         <div v-show="loading" :class="ns.e('mask')">
           <div :class="ns.e('loader')">
             <div :class="ns.e('spinner')" />
-            <p>{{ isString(loadingConfig) ? loadingConfig : "Teek 拼命加载中 ..." }}</p>
+            <p>{{ isString(loadingConfig) ? loadingConfig : "Tbagr 拼命加载中 ..." }}</p>
           </div>
         </div>
       </Transition>

@@ -26,7 +26,7 @@ provide(teekConfigContext, {
   comment: {
     options: {
       // waline 配置，官网：https://waline.js.org/
-      serverURL: "https://vp.teek.top/",
+      serverURL: "https://tbagr.com/",
       jsLink: "https://unpkg.com/@waline/client@v3/dist/waline.js",
       cssLink: "https://unpkg.com/@waline/client@v3/dist/waline.css",
     },
@@ -66,7 +66,7 @@ provide(teekConfigContext, {
   comment: {
     options: {
       // waline 配置，官网：https://waline.js.org/
-      serverURL: "https://vp.teek.top/",
+      serverURL: "https://tbagr.com/",
       jsLink: "https://unpkg.com/@waline/client@v3/dist/waline.js",
       cssLink: "https://unpkg.com/@waline/client@v3/dist/waline.css",
     },

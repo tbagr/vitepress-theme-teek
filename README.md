@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[Github](https://github.com/Kele-Bingtang/vitepress-theme-teek) ｜ [Gitee](https://gitee.com/kele-bingtang/vitepress-theme-teek) ｜ [Preview](https://notes.teek.top/) ｜[Docs](http://vp.teek.top/)
+[Github](https://github.com/Kele-Bingtang/vitepress-theme-teek) ｜ [Gitee](https://gitee.com/kele-bingtang/vitepress-theme-teek) ｜ [Preview](https://notes.teek.top/) ｜[Docs](http://tbagr.com/)
 
 ✨一个轻量、简洁高效、灵活配置、易于扩展的 VitePress 主题。
 
@@ -33,11 +33,11 @@
 
 ## Teek 在线安装
 
-请看 [快速开始](https://vp.teek.top/guide/quickstart)。
+请看 [快速开始](https://tbagr.com/guide/quickstart)。
 
 ## 贡献指南
 
-请看 [贡献指南](https://vp.teek.top/guide/contribution)。
+请看 [贡献指南](https://tbagr.com/guide/contribution)。
 
 ## 本地运行
 
@@ -67,7 +67,7 @@ pnpm docs:dev
 
 ## 效果图
 
-下面只列出部分效果图，更多的功能请访问 [官方文档](https://vp.teek.top)
+下面只列出部分效果图，更多的功能请访问 [官方文档](https://tbagr.com)
 
 ### 文档首页
 
@@ -121,7 +121,7 @@ pnpm docs:dev
 - 提供更好的技术支持
 - 开发更多实用功能
 
-二维码没有正常显示？点 [这里](https://vp.teek.top/personal.html) 😎
+二维码没有正常显示？点 [这里](https://tbagr.com/personal.html) 😎
 
 ## 致谢
 

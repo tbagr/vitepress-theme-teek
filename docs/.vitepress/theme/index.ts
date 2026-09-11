@@ -2,7 +2,7 @@ import Teek from "vitepress-theme-teek";
 import TeekLayoutProvider from "./components/teek-layout-provider.vue";
 
 // Teek 本地主题包引用（与 Teek 在线主题包引用 二选一）
-// 当前引入文件为 scss，需要执行 pnpm add sass，如果不想安装额外依赖，可以直接引入 Teek 已经构建好的 css 文件，请看 https://vp.teek.top/styles-plus.html
+// 当前引入文件为 scss，需要执行 pnpm add sass，如果不想安装额外依赖，可以直接引入 Teek 已经构建好的 css 文件，请看 https://tbagr.com/styles-plus.html
 import "@teek/theme-chalk/vp-plus/code-block-mobile.scss"; // 移动端代码块样式优化
 import "@teek/theme-chalk/vp-plus/sidebar.scss"; // 侧边栏优化
 import "@teek/theme-chalk/vp-plus/nav.scss"; // 导航栏优化

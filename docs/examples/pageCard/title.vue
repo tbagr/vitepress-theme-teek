@@ -16,7 +16,7 @@ const handleClick = () => {
       </ul>
     </TkPageCard>
 
-    <TkPageCard title="点击我跳转" titleLink="http://vp.teek.top">
+    <TkPageCard title="点击我跳转" titleLink="https://tbagr.com">
       <ul>
         <li v-for="item in list" :key="item">{{ item }}</li>
       </ul>

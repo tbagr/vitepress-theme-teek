@@ -16,7 +16,7 @@ const svg = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" 
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2989306_w303erbip9.css" />
     <TkIcon icon="icon-github" icon-type="iconfont" />
 
-    <TkIcon icon="https://vp.teek.top/blog/bg2.webp" icon-type="img" imgAlt="Teek Img" />
+    <TkIcon icon="https://tbagr.com/blog/bg2.webp" icon-type="img" imgAlt="Teek Img" />
   </div>
 </template>
 

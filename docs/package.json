@@ -8,7 +8,7 @@
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "vitepress preview",
-    "baiduPush": "tsx .scripts/baiduPush.ts https://vp.teek.top && bash .scripts/baiduPush.sh"
+    "baiduPush": "tsx .scripts/baiduPush.ts https://tbagr.com && bash .scripts/baiduPush.sh"
   },
   "devDependencies": {
     "echarts": "^5.6.0",

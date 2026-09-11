@@ -35,9 +35,9 @@ body:
       label: 验证项
       description: 提交问题之前，请确保您已完成以下操作
       options:
-        - label: 阅读 [文档](https://vp.teek.top/)。
+        - label: 阅读 [文档](https://tbagr.com/)。
           required: true
-        - label: 阅读 [贡献指南](https://vp.teek.top/guide/contribution.html)。
+        - label: 阅读 [贡献指南](https://tbagr.com/guide/contribution.html)。
           required: true
         - label: 检查是否已存在请求相同功能的问题，以避免创建重复问题。
           required: true
