@@ -14,14 +14,16 @@ interface ThemeEnhanceConfig {
 export type ChangeType =
   | "bannerWallpaper"
   | "bannerDescStyle"
-  | "bannerImgWaves"
+  | "themeSize"
   | "postStyle"
   | "postCoverImgMode"
   | "homeCardListPosition"
   | "pageStyle"
-  | "themeSize"
+  | "bannerTitle"
+  | "bannerImgWaves"
   | "loading"
-  | "comment";
+  | "comment"
+  | "ribbon";
 
 const namespace = "theme-setting";
 const teekConfig = ref<TeekConfig>({});
@@ -119,6 +121,22 @@ const bannerDescStyle = {
   },
 };
 
+// 首页尺寸
+const themeSize: ThemeEnhanceConfig = {
+  modelValue: theme.value.themeSize ?? "",
+  title: "首页尺寸",
+  options: [
+    { value: "small", label: "Small" },
+    { value: "", label: "Default" },
+    { value: "large", label: "Large" },
+    { value: "wide", label: "Wide" },
+  ],
+  change(value: TeekConfig["themeSize"]) {
+    teekConfig.value.themeSize = value;
+    change("themeSize");
+  },
+};
+
 // 首页文章布局
 const postStyle: ThemeEnhanceConfig = {
   modelValue: theme.value.post.postStyle ?? "list",
@@ -134,10 +152,10 @@ const postStyle: ThemeEnhanceConfig = {
   },
 };
 
-// 首页文章封面图模式
+// 首页文章列表封面图模式
 const postCoverImgMode: ThemeEnhanceConfig = {
   modelValue: theme.value.post.coverImgMode ?? "full",
-  title: "首页文章封面图模式",
+  title: "首页文章列表封面图模式",
   options: [
     { value: "small", label: "缩略图" },
     { value: "full", label: "填充图" },
@@ -149,10 +167,10 @@ const postCoverImgMode: ThemeEnhanceConfig = {
   },
 };
 
-// 首页卡片栏布局
+// 首页文章卡片栏布局
 const homeCardListPosition: ThemeEnhanceConfig = {
   modelValue: theme.value.homeCardListPosition ?? "right",
-  title: "首页卡片栏布局",
+  title: "首页文章卡片栏布局",
   options: [
     { value: "left", label: "左侧" },
     { value: "right", label: "右侧" },
@@ -161,22 +179,6 @@ const homeCardListPosition: ThemeEnhanceConfig = {
   change: (value: TeekConfig["homeCardListPosition"]) => {
     teekConfig.value.homeCardListPosition = value;
     change("homeCardListPosition");
-  },
-};
-
-// 首页尺寸
-const themeSize: ThemeEnhanceConfig = {
-  modelValue: theme.value.themeSize ?? "",
-  title: "首页尺寸",
-  options: [
-    { value: "small", label: "Small" },
-    { value: "", label: "Default" },
-    { value: "large", label: "Large" },
-    { value: "wide", label: "Wide" },
-  ],
-  change(value: TeekConfig["themeSize"]) {
-    teekConfig.value.themeSize = value;
-    change("themeSize");
   },
 };
 
@@ -269,6 +271,7 @@ const comment: ThemeEnhanceConfig = {
   },
 };
 
+// 彩带背景
 const ribbon = {
   modelValue: false,
   title: "彩带背景",
@@ -305,41 +308,49 @@ const handleCopy = async () => {
       </div>
     </div>
 
+    <!-- 首页壁纸模式 -->
     <div class="wrapper mw-70">
       <span class="tk-theme-enhance__title">{{ bannerWallpaper.title }}</span>
       <TkSegmented v-bind="bannerWallpaper" @change="bannerWallpaper.change" />
     </div>
 
+    <!-- 首页描述切换模式 -->
     <div class="wrapper">
       <span class="tk-theme-enhance__title">{{ bannerDescStyle.title }}</span>
       <TkSegmented v-bind="bannerDescStyle" @change="bannerDescStyle.change" />
     </div>
 
-    <div class="wrapper">
-      <span class="tk-theme-enhance__title">{{ postStyle.title }}</span>
-      <TkSegmented v-bind="postStyle" @change="postStyle.change" />
-    </div>
-
-    <div class="wrapper">
-      <span class="tk-theme-enhance__title">{{ homeCardListPosition.title }}</span>
-      <TkSegmented v-bind="homeCardListPosition" @change="homeCardListPosition.change" />
-    </div>
-
+    <!-- 首页尺寸 -->
     <div class="wrapper">
       <span class="tk-theme-enhance__title">{{ themeSize.title }}</span>
       <TkSegmented v-bind="themeSize" @change="themeSize.change" />
     </div>
 
-    <div class="wrapper mw-70">
-      <span class="tk-theme-enhance__title">{{ pageStyle.title }}</span>
-      <TkSegmented v-bind="pageStyle" @change="pageStyle.change" />
+    <!-- 首页文章布局 -->
+    <div class="wrapper">
+      <span class="tk-theme-enhance__title">{{ postStyle.title }}</span>
+      <TkSegmented v-bind="postStyle" @change="postStyle.change" />
     </div>
 
+    <!-- 首页文章列表封面图模式 -->
     <div class="wrapper">
       <span class="tk-theme-enhance__title">{{ postCoverImgMode.title }}</span>
       <TkSegmented v-bind="postCoverImgMode" @change="postCoverImgMode.change" />
     </div>
 
+    <!-- 首页文章卡片栏布局 -->
+    <div class="wrapper">
+      <span class="tk-theme-enhance__title">{{ homeCardListPosition.title }}</span>
+      <TkSegmented v-bind="homeCardListPosition" @change="homeCardListPosition.change" />
+    </div>
+
+    <!-- 文章页背景风格 -->
+    <div class="wrapper mw-70">
+      <span class="tk-theme-enhance__title">{{ pageStyle.title }}</span>
+      <TkSegmented v-bind="pageStyle" @change="pageStyle.change" />
+    </div>
+
+    <!-- 首页壁纸标题 -->
     <div class="wrapper flx-justify-between">
       <span>{{ bannerTitle.title }}</span>
       <TkSwitch :model-value="bannerTitle.modelValue" @change="bannerTitle.change" />
@@ -348,6 +359,7 @@ const handleCopy = async () => {
       <!-- <TkSegmented v-bind="bannerTitle" @change="bannerTitle.change" /> -->
     </div>
 
+    <!-- 首页壁纸波浪纹 -->
     <div class="wrapper flx-justify-between">
       <span>{{ bannerImgWaves.title }}</span>
       <TkSwitch :model-value="bannerImgWaves.modelValue" @change="bannerImgWaves.change" />
@@ -356,6 +368,7 @@ const handleCopy = async () => {
       <!-- <TkSegmented v-bind="bannerImgWaves" @change="bannerImgWaves.change" /> -->
     </div>
 
+    <!-- 路由加载动画 -->
     <div class="wrapper flx-justify-between">
       <span>{{ loading.title }}</span>
       <TkSwitch :model-value="loading.modelValue" @change="loading.change" />
@@ -364,6 +377,7 @@ const handleCopy = async () => {
       <!-- <TkSegmented v-bind="loading" @change="loading.change" /> -->
     </div>
 
+    <!-- Giscus 评论区 -->
     <div class="wrapper flx-justify-between">
       <span>{{ comment.title }}</span>
       <TkSwitch :model-value="comment.modelValue" @change="comment.change" />
@@ -372,6 +386,7 @@ const handleCopy = async () => {
       <!-- <TkSegmented v-bind="comment" @change="comment.change" /> -->
     </div>
 
+    <!-- 彩带背景 -->
     <div class="wrapper flx-justify-between">
       <span>{{ ribbon.title }}</span>
       <TkSwitch :model-value="ribbon.modelValue" @change="ribbon.change" />

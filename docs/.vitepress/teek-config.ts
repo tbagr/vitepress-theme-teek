@@ -7,15 +7,15 @@ import { version } from "../../packages/teek/version";
 // import { version } from "vitepress-theme-teek/es/version";
 
 export const teekConfig = defineTeekConfig({
-  teekHome: false,
+  teekHome: true,
   vpHome: true,
   loading: false,
   sidebarTrigger: true,
-  author: { name: "Teeker", link: "https://github.com/Kele-Bingtang" },
+  author: { name: "Tbagr", link: "https://github.com/tbagr" },
   blogger: {
-    name: "天客",
-    slogan: "朝圣的使徒，正在走向编程的至高殿堂！",
-    avatar: "https://testingcf.jsdelivr.net/gh/Kele-Bingtang/static/user/avatar1.png",
+    name: "芙宁娜西妲",
+    slogan: "再见，那维莱特。希望你喜欢这五百年来属于你的戏份！",
+    avatar: "https://www.tbagr.com/teek-logo-large.png",
     shape: "circle-rotate",
     circleBgImg: "/blog/bg4.webp",
     color: "#ffffff",
@@ -30,14 +30,10 @@ export const teekConfig = defineTeekConfig({
     dateFormat: "yyyy-MM-dd hh:mm:ss",
   },
   banner: {
-    name: "🎉 Teek Blog",
+    name: "🎉 芙宁娜西妲",
     bgStyle: "fullImg",
     imgSrc: ["/blog/bg1.webp", "/blog/bg2.webp", "/blog/bg3.webp"],
-    description: [
-      "故事由我书写，旅程由你见证，传奇由她聆听 —— 来自 Young Kbt",
-      "积跬步以至千里，致敬每个爱学习的你 —— 来自 Evan Xu",
-      "这一生波澜壮阔或是不惊都没问题 —— 来自 Weibw",
-    ],
+    description: ["永世传颂，不休独舞，神爱世人，芙门永存！", "草木逢春，慧如恒沙，神爱世人，妲门永存！"],
     descStyle: "types",
   },
   wallpaper: {
@@ -78,7 +74,7 @@ export const teekConfig = defineTeekConfig({
     topMessage: [
       `<span><img alt="VitePress" src="https://liuyuyang.net/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fanimals.65eaf6e3.webp&w=750&q=75" style="width: 750px; height: 80px"><span/>`,
 
-      `<a title="Github release" target="_blank" href="https://github.com/Kele-Bingtang/vitepress-theme-teek/releases" style="margin-right: 10px;">
+      `<a title="Github release" target="_blank" href="https://github.com/tbagr/vitepress-theme-teek/releases" style="margin-right: 10px;">
         <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/Kele-Bingtang/vitepress-theme-teek?logo=github">
       </a>
 
@@ -89,11 +85,11 @@ export const teekConfig = defineTeekConfig({
       <img src="https://img.shields.io/badge/v18.x-x?logo=node.js&label=node" alt="node version" style="margin-right: 10px; margin-bottom: 10px;">
       <img src="https://img.shields.io/github/languages/code-size/Kele-Bingtang/vitepress-theme-teek?logo=Visual Studio Code&logoColor=blue" alt="GitHub code size in bytes" style="margin-right: 10px; margin-bottom: 10px;">
 
-      <a title="GitHub Discussions" target="_blank" href="https://github.com/Kele-Bingtang/vitepress-theme-teek/discussions" style="margin-right: 10px;">
+      <a title="GitHub Discussions" target="_blank" href="https://github.com/tbagr/vitepress-theme-teek/discussions" style="margin-right: 10px;">
         <img src="https://img.shields.io/github/discussions/Kele-Bingtang/vitepress-theme-teek?color=9cf&logo=github" alt="GitHub Discussions">
       </a>
 
-      <a title="MIT License" target="_blank" href="https://github.com/Kele-Bingtang/vitepress-theme-teek/blob/master/LICENSE" style="margin-right: 10px;">
+      <a title="MIT License" target="_blank" href="https://github.com/tbagr/vitepress-theme-teek/blob/master/LICENSE" style="margin-right: 10px;">
         <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT License">
       </a>`,
     ],
@@ -172,12 +168,12 @@ export const teekConfig = defineTeekConfig({
     {
       icon: "icon-github",
       name: "GitHub",
-      link: "https://github.com/kele-bingtang",
+      link: "https://github.com/tbagr",
     },
     {
       icon: "icon-gitee",
       name: "Gitee",
-      link: "https://gitee.com/kele-bingtang",
+      link: "https://gitee.com/tbagr",
     },
   ],
   themeEnhance: {
@@ -224,7 +220,7 @@ export const teekConfig = defineTeekConfig({
   },
   markdown: {
     demo: {
-      githubUrl: "https://github.com/Kele-Bingtang/vitepress-theme-teek/blob/master/docs",
+      githubUrl: "https://github.com/tbagr/vitepress-theme-teek/blob/master/docs",
     },
   },
   siteAnalytics: [

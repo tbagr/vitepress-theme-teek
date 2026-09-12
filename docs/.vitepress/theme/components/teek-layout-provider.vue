@@ -55,8 +55,12 @@ const handleThemeConfigChange = (config: TeekConfig, type: ChangeType) => {
   }
   // 首页描述切换模式
   else if (type === "bannerDescStyle") teekConfig.value.banner = { ...teekConfig.value.banner, ...config.banner };
+  // 主题尺寸
+  else if (type === "themeSize") teekConfig.value.themeSize = config.themeSize;
   // 首页文章布局
   else if (type === "postStyle") teekConfig.value.post = { ...teekConfig.value.post, ...config.post };
+  // 文章封面图片模式
+  else if (type === "postCoverImgMode") teekConfig.value.post = { ...teekConfig.value.post, ...config.post };
   // 首页卡片列表位置
   else if (type === "homeCardListPosition") teekConfig.value.homeCardListPosition = config.homeCardListPosition;
   // 页面样式
@@ -64,10 +68,6 @@ const handleThemeConfigChange = (config: TeekConfig, type: ChangeType) => {
     teekConfig.value.pageStyle = config.pageStyle;
     teekConfig.value.themeEnhance = { ...teekConfig.value.themeEnhance, ...config.themeEnhance };
   }
-  // 文章封面图片模式
-  else if (type === "postCoverImgMode") teekConfig.value.post = { ...teekConfig.value.post, ...config.post };
-  // 主题尺寸
-  else if (type === "themeSize") teekConfig.value.themeSize = config.themeSize;
   // 首页 Banner 图片波浪
   else if (type === "bannerImgWaves") teekConfig.value.banner = { ...teekConfig.value.banner, ...config.banner };
   // 加载动画

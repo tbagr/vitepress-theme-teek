@@ -6,7 +6,7 @@
   "author": {
     "name": "tb659",
     "email": "gtrb1122@163.com",
-    "url": "https://tbagr.com"
+    "url": "https://github.com/tbagr"
   },
   "keywords": [
     "vitepress",
@@ -16,13 +16,13 @@
     "frontmatter"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/Kele-Bingtang/vitepress-theme-teek/tree/master/plugins/vitepress-plugin-auto-frontmatter",
+  "homepage": "https://github.com/tbagr/vitepress-theme-teek/tree/master/plugins/vitepress-plugin-auto-frontmatter",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kele-Bingtang/vitepress-theme-teek.git"
+    "url": "git+https://github.com/tbagr/vitepress-theme-teek.git"
   },
   "bugs": {
-    "url": "https://github.com/Kele-Bingtang/vitepress-theme-teek/issues"
+    "url": "https://github.com/tbagr/vitepress-theme-teek/issues"
   },
   "files": [
     "dist",
