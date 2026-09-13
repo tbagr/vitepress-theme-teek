@@ -2,7 +2,7 @@
 layout: home
 
 tk:
-  teekHome: false
+  teekHome: true
 
 hero:
   name: Tbagr
@@ -11,10 +11,8 @@ hero:
   actions:
     - theme: brand
       text: 芙门永存
-      # link: /guide/quickstart
     - theme: alt
       text: 妲门永存
-      # link: /reference/config
   image:
     src: /teek-logo-large.png
     alt: 芙宁娜西妲
