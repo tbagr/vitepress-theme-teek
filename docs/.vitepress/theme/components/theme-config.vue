@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Post, TeekConfig, SegmentedOption } from "vitepress-theme-teek";
 import { useData } from "vitepress";
-import { ref } from "vue";
+import { nextTick, onMounted, reactive, ref, inject } from "vue";
 import { TkSegmented, TkSwitch, TkMessage, useClipboard } from "vitepress-theme-teek";
 
 interface ThemeEnhanceConfig {
@@ -25,8 +25,28 @@ export type ChangeType =
   | "comment"
   | "ribbon";
 
+const STORAGE_PREFIX = "tk-theme-config-";
+
+const getStorage = <T,>(key: string, defaultValue: T): T => {
+  try {
+    const raw = localStorage.getItem(STORAGE_PREFIX + key);
+    if (raw === null) return defaultValue;
+    if (typeof defaultValue === "boolean") return (raw === "true") as T;
+    return raw as unknown as T;
+  } catch {
+    return defaultValue;
+  }
+};
+
+const setStorage = (key: string, value: any) => {
+  try {
+    localStorage.setItem(STORAGE_PREFIX + key, String(value));
+  } catch {}
+};
+
 const namespace = "theme-setting";
 const teekConfig = ref<TeekConfig>({});
+const restoring = inject<ReturnType<typeof ref<boolean>>>("themeConfigRestoring", ref(false));
 
 const { theme } = useData();
 
@@ -36,8 +56,8 @@ const bodyBgImgSrc = theme.value.bodyBgImg?.imgSrc;
 const emit = defineEmits<{ change: [config: TeekConfig, type: ChangeType] }>();
 
 // 首页壁纸模式
-const bannerWallpaper: ThemeEnhanceConfig = {
-  modelValue: "doc",
+const bannerWallpaper = reactive<ThemeEnhanceConfig>({
+  modelValue: getStorage("wallpaper", "doc"),
   title: "首页壁纸模式",
   options: [
     { value: "doc", label: "文档模式" },
@@ -48,6 +68,9 @@ const bannerWallpaper: ThemeEnhanceConfig = {
     { value: "bodyBgImg", label: "全屏壁纸" },
   ],
   change(value: string) {
+    bannerWallpaper.modelValue = value;
+    setStorage("wallpaper", value);
+
     // 初始化 Banner 图片，不存在时从 Body 获取
     const initBannerImgSrc = () => {
       // 如果首页 Banner 没有设置图片，则使用 Body 图片
@@ -103,11 +126,11 @@ const bannerWallpaper: ThemeEnhanceConfig = {
 
     change("bannerWallpaper");
   },
-};
+});
 
 // 首页描述切换模式
-const bannerDescStyle = {
-  modelValue: theme.value.banner.descStyle ?? "default",
+const bannerDescStyle = reactive<ThemeEnhanceConfig>({
+  modelValue: getStorage("descStyle", theme.value.banner.descStyle ?? "default"),
   title: "首页描述切换模式",
   options: [
     { value: "default", label: "展示" },
@@ -115,15 +138,17 @@ const bannerDescStyle = {
     { value: "switch", label: "切换" },
   ],
   change(value: NonNullable<TeekConfig["banner"]>["descStyle"]) {
+    bannerDescStyle.modelValue = value;
+    setStorage("descStyle", value);
     teekConfig.value.banner = { ...teekConfig.value.banner };
     teekConfig.value.banner.descStyle = value;
     change("bannerDescStyle");
   },
-};
+});
 
 // 首页尺寸
-const themeSize: ThemeEnhanceConfig = {
-  modelValue: theme.value.themeSize ?? "",
+const themeSize = reactive<ThemeEnhanceConfig>({
+  modelValue: getStorage("themeSize", theme.value.themeSize ?? ""),
   title: "首页尺寸",
   options: [
     { value: "small", label: "Small" },
@@ -132,44 +157,50 @@ const themeSize: ThemeEnhanceConfig = {
     { value: "wide", label: "Wide" },
   ],
   change(value: TeekConfig["themeSize"]) {
+    themeSize.modelValue = value;
+    setStorage("themeSize", value);
     teekConfig.value.themeSize = value;
     change("themeSize");
   },
-};
+});
 
 // 首页文章布局
-const postStyle: ThemeEnhanceConfig = {
-  modelValue: theme.value.post.postStyle ?? "list",
+const postStyle = reactive<ThemeEnhanceConfig>({
+  modelValue: getStorage("postStyle", theme.value.post.postStyle ?? "list"),
   title: "首页文章布局",
   options: [
     { value: "list", label: "列表" },
     { value: "card", label: "卡片" },
   ],
   change(value: Post["postStyle"]) {
+    postStyle.modelValue = value;
+    setStorage("postStyle", value);
     teekConfig.value.post = { ...teekConfig.value.post };
     teekConfig.value.post.postStyle = value;
     change("postStyle");
   },
-};
+});
 
 // 首页文章列表封面图模式
-const postCoverImgMode: ThemeEnhanceConfig = {
-  modelValue: theme.value.post.coverImgMode ?? "full",
+const postCoverImgMode = reactive<ThemeEnhanceConfig>({
+  modelValue: getStorage("coverImgMode", theme.value.post.coverImgMode ?? "full"),
   title: "首页文章列表封面图模式",
   options: [
     { value: "small", label: "缩略图" },
     { value: "full", label: "填充图" },
   ],
   change(value: Post["coverImgMode"]) {
+    postCoverImgMode.modelValue = value;
+    setStorage("coverImgMode", value);
     teekConfig.value.post = { ...teekConfig.value.post };
     teekConfig.value.post.coverImgMode = value;
     change("postCoverImgMode");
   },
-};
+});
 
 // 首页文章卡片栏布局
-const homeCardListPosition: ThemeEnhanceConfig = {
-  modelValue: theme.value.homeCardListPosition ?? "right",
+const homeCardListPosition = reactive<ThemeEnhanceConfig>({
+  modelValue: getStorage("cardPosition", theme.value.homeCardListPosition ?? "right"),
   title: "首页文章卡片栏布局",
   options: [
     { value: "left", label: "左侧" },
@@ -177,14 +208,16 @@ const homeCardListPosition: ThemeEnhanceConfig = {
     { value: false, label: "隐藏" },
   ],
   change: (value: TeekConfig["homeCardListPosition"]) => {
+    homeCardListPosition.modelValue = value;
+    setStorage("cardPosition", value);
     teekConfig.value.homeCardListPosition = value;
     change("homeCardListPosition");
   },
-};
+});
 
 // 文章页背景风格
-const pageStyle: ThemeEnhanceConfig = {
-  modelValue: theme.value.pageStyle ?? "default",
+const pageStyle = reactive<ThemeEnhanceConfig>({
+  modelValue: getStorage("pageStyle", theme.value.pageStyle ?? "default"),
   title: "文章页背景风格",
   options: [
     { value: "default", label: "默认" },
@@ -194,67 +227,78 @@ const pageStyle: ThemeEnhanceConfig = {
     { value: "segment-nav", label: "书页翻阅" },
   ],
   change(value: TeekConfig["pageStyle"]) {
+    pageStyle.modelValue = value;
+    setStorage("pageStyle", value);
     teekConfig.value.pageStyle = value;
     teekConfig.value.themeEnhance = { ...teekConfig.value.themeEnhance, layoutSwitch: { defaultMode: "original" } };
     change("pageStyle");
   },
-};
+});
 
 // 首页壁纸标题
-const bannerTitle = {
-  modelValue: Boolean(theme.value.banner.name),
+const bannerTitle = reactive({
+  modelValue: getStorage("bannerTitle", Boolean(theme.value.banner.name)),
   title: "首页壁纸标题",
   options: [
     { value: true, label: "ON" },
     { value: false, label: "OFF" },
   ],
   change(value: boolean) {
+    bannerTitle.modelValue = value;
+    setStorage("bannerTitle", value);
     if (!document) return;
     const el = document.querySelector(".tk-banner-content") as HTMLElement | null;
 
     // DOM 操作隐藏元素
     el && (el.style.display = value ? "block" : "none");
   },
-};
+});
 
 // 首页壁纸波浪纹
-const bannerImgWaves = {
-  modelValue: Boolean(theme.value.banner.imgWaves ?? true),
+const bannerImgWaves = reactive({
+  modelValue: getStorage("imgWaves", Boolean(theme.value.banner.imgWaves ?? true)),
   title: "首页壁纸波浪纹",
   options: [
     { value: true, label: "ON" },
     { value: false, label: "OFF" },
   ],
-  change(value: NonNullable<TeekConfig["banner"]>["imgWaves"]) {
+  change(value: boolean) {
+    console.log(value);
+    bannerImgWaves.modelValue = value;
+    setStorage("imgWaves", value);
     teekConfig.value.banner = { ...teekConfig.value.banner };
     teekConfig.value.banner.imgWaves = value;
     change("bannerImgWaves");
   },
-};
+});
 
 // 路由加载动画
-const loading: ThemeEnhanceConfig = {
-  modelValue: Boolean(theme.value.loading ?? false),
+const loading = reactive<ThemeEnhanceConfig>({
+  modelValue: getStorage("loading", Boolean(theme.value.loading ?? false)),
   title: "路由加载动画",
   options: [
     { value: true, label: "ON" },
     { value: false, label: "OFF" },
   ],
   change(value: TeekConfig["loading"]) {
+    loading.modelValue = value;
+    setStorage("loading", value);
     teekConfig.value.loading = value;
     change("loading");
   },
-};
+});
 
 // Giscus 评论区
-const comment: ThemeEnhanceConfig = {
-  modelValue: Boolean(theme.value.comment ?? false),
+const comment = reactive<ThemeEnhanceConfig>({
+  modelValue: getStorage("comment", Boolean(theme.value.comment ?? false)),
   title: "Giscus 评论区",
   options: [
     { value: true, label: "ON" },
     { value: false, label: "OFF" },
   ],
   change(value: boolean) {
+    comment.modelValue = value;
+    setStorage("comment", value);
     teekConfig.value.comment = value
       ? {
           provider: "giscus",
@@ -269,24 +313,122 @@ const comment: ThemeEnhanceConfig = {
 
     change("comment");
   },
-};
+});
 
 // 彩带背景
-const ribbon = {
-  modelValue: false,
+const ribbon = reactive({
+  modelValue: getStorage("ribbon", false),
   title: "彩带背景",
   options: [
     { value: true, label: "ON" },
     { value: false, label: "OFF" },
   ],
   change(value: boolean) {
+    ribbon.modelValue = value;
+    setStorage("ribbon", value);
     change("ribbon", value);
   },
-};
+});
 
 const change = (type: ChangeType, value?: any) => {
   emit("change", value ?? teekConfig.value, type);
 };
+
+// 页面加载时，从 localStorage 恢复配置并回放给父组件应用
+onMounted(() => {
+  restoring.value = true;
+
+  const saved = (key: string) => localStorage.getItem(STORAGE_PREFIX + key);
+
+  // bannerWallpaper
+  const wallpaperVal = saved("wallpaper");
+  if (wallpaperVal && wallpaperVal !== "doc") {
+    bannerWallpaper.change(wallpaperVal);
+  }
+
+  // bannerDescStyle
+  const descVal = saved("descStyle");
+  if (descVal && descVal !== (theme.value.banner.descStyle ?? "default")) {
+    bannerDescStyle.change(descVal);
+  }
+
+  // themeSize
+  const sizeVal = saved("themeSize");
+  if (sizeVal !== null && sizeVal !== (theme.value.themeSize ?? "")) {
+    themeSize.change(sizeVal);
+  }
+
+  // postStyle
+  const postVal = saved("postStyle");
+  if (postVal && postVal !== (theme.value.post.postStyle ?? "list")) {
+    postStyle.change(postVal);
+  }
+
+  // postCoverImgMode
+  const coverVal = saved("coverImgMode");
+  if (coverVal && coverVal !== (theme.value.post.coverImgMode ?? "full")) {
+    postCoverImgMode.change(coverVal);
+  }
+
+  // homeCardListPosition
+  const cardVal = saved("cardPosition");
+  if (cardVal !== null) {
+    const parsed = cardVal === "false" ? false : cardVal;
+    if (parsed !== (theme.value.homeCardListPosition ?? "right")) {
+      homeCardListPosition.change(parsed);
+    }
+  }
+
+  // pageStyle
+  const pageVal = saved("pageStyle");
+  if (pageVal && pageVal !== (theme.value.pageStyle ?? "default")) {
+    pageStyle.change(pageVal);
+  }
+
+  // bannerImgWaves
+  const wavesVal = saved("imgWaves");
+  if (wavesVal !== null) {
+    const parsed = wavesVal === "true";
+    if (parsed !== Boolean(theme.value.banner.imgWaves ?? true)) {
+      bannerImgWaves.change(parsed);
+    }
+  }
+
+  // loading
+  const loadingVal = saved("loading");
+  if (loadingVal !== null) {
+    const parsed = loadingVal === "true";
+    if (parsed !== Boolean(theme.value.loading ?? false)) {
+      loading.change(parsed);
+    }
+  }
+
+  // comment
+  const commentVal = saved("comment");
+  if (commentVal !== null) {
+    const parsed = commentVal === "true";
+    if (parsed !== Boolean(theme.value.comment ?? false)) {
+      comment.change(parsed);
+    }
+  }
+
+  // ribbon
+  const ribbonVal = saved("ribbon");
+  if (ribbonVal !== null && ribbonVal === "true") {
+    ribbon.change(true);
+  }
+
+  // bannerTitle（DOM 操作，单独处理）
+  const titleVal = saved("bannerTitle");
+  if (titleVal !== null) {
+    nextTick(() => {
+      const el = document.querySelector(".tk-banner-content") as HTMLElement | null;
+      el && (el.style.display = titleVal === "true" ? "block" : "none");
+    });
+  }
+
+  restoring.value = false;
+});
 
 const { copy, copied } = useClipboard();
 
@@ -353,46 +495,31 @@ const handleCopy = async () => {
     <!-- 首页壁纸标题 -->
     <div class="wrapper flx-justify-between">
       <span>{{ bannerTitle.title }}</span>
-      <TkSwitch :model-value="bannerTitle.modelValue" @change="bannerTitle.change" />
-
-      <!-- <span class="tk-theme-enhance__title">{{ bannerTitle.title }}</span> -->
-      <!-- <TkSegmented v-bind="bannerTitle" @change="bannerTitle.change" /> -->
+      <TkSwitch :model-value="bannerTitle.modelValue" @change="(v: boolean) => bannerTitle.change(v)" />
     </div>
 
     <!-- 首页壁纸波浪纹 -->
     <div class="wrapper flx-justify-between">
       <span>{{ bannerImgWaves.title }}</span>
-      <TkSwitch :model-value="bannerImgWaves.modelValue" @change="bannerImgWaves.change" />
-
-      <!-- <span class="tk-theme-enhance__title">{{ bannerImgWaves.title }}</span> -->
-      <!-- <TkSegmented v-bind="bannerImgWaves" @change="bannerImgWaves.change" /> -->
+      <TkSwitch :model-value="bannerImgWaves.modelValue" @change="(v: boolean) => bannerImgWaves.change(v)" />
     </div>
 
     <!-- 路由加载动画 -->
     <div class="wrapper flx-justify-between">
       <span>{{ loading.title }}</span>
-      <TkSwitch :model-value="loading.modelValue" @change="loading.change" />
-
-      <!-- <span class="tk-theme-enhance__title">{{ loading.title }}</span> -->
-      <!-- <TkSegmented v-bind="loading" @change="loading.change" /> -->
+      <TkSwitch :model-value="loading.modelValue" @change="(v: boolean) => loading.change(v)" />
     </div>
 
     <!-- Giscus 评论区 -->
     <div class="wrapper flx-justify-between">
       <span>{{ comment.title }}</span>
-      <TkSwitch :model-value="comment.modelValue" @change="comment.change" />
-
-      <!-- <span class="tk-theme-enhance__title">{{ comment.title }}</span> -->
-      <!-- <TkSegmented v-bind="comment" @change="comment.change" /> -->
+      <TkSwitch :model-value="comment.modelValue" @change="(v: boolean) => comment.change(v)" />
     </div>
 
     <!-- 彩带背景 -->
     <div class="wrapper flx-justify-between">
       <span>{{ ribbon.title }}</span>
-      <TkSwitch :model-value="ribbon.modelValue" @change="ribbon.change" />
-
-      <!-- <span class="tk-theme-enhance__title">{{ comment.title }}</span> -->
-      <!-- <TkSegmented v-bind="comment" @change="comment.change" /> -->
+      <TkSwitch :model-value="ribbon.modelValue" @change="(v: boolean) => ribbon.change(v)" />
     </div>
   </div>
 </template>

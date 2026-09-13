@@ -17,6 +17,10 @@ const currentStyle = ref("doc");
 const teekConfig = ref<TeekConfig>({});
 provide(teekConfigContext, teekConfig);
 
+// 标记是否正在从 localStorage 恢复配置（子组件回放时不弹提示）
+const restoring = ref(false);
+provide("themeConfigRestoring", restoring);
+
 // 彩带背景
 const { start: startRibbon, stop: stopRibbon } = useRibbon({ immediate: false, clickReRender: true });
 // 页脚运行时间
@@ -42,7 +46,7 @@ watch(frontmatter, newVal => setTimeout(() => watchRuntime(newVal.layout, curren
 });
 
 // 主题配置切换
-const handleThemeConfigChange = (config: TeekConfig, type: ChangeType) => {
+const handleThemeConfigChange = (config: TeekConfig, type: ChangeType, silent?: boolean) => {
   // 首页壁纸模式
   if (type === "bannerWallpaper") {
     teekConfig.value.teekHome = config.teekHome;
@@ -80,10 +84,14 @@ const handleThemeConfigChange = (config: TeekConfig, type: ChangeType) => {
     else stopRibbon();
   }
 
-  TkMessage.success({
-    message: "切换配置成功！",
-    customClass: "antd",
-  });
+  if (!silent) {
+    if (!restoring.value) {
+      TkMessage.success({
+        message: "切换配置成功！",
+        customClass: "antd",
+      });
+    }
+  }
 };
 </script>
 
