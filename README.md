@@ -100,35 +100,3 @@ pnpm docs:dev
 ### 归档页
 
 ![归档页](https://testingcf.jsdelivr.net/gh/Kele-Bingtang/static/vp-teek-cover/20250807004922.png)
-
-## 💖 支持这个项目
-
-如果您正在使用这个项目并感觉这个项目给你带来帮助，或者是想支持我继续开发，您可以通过如下任意方式支持我：
-
-- Star 并分享 [VitePress Theme Teek](https://github.com/Kele-Bingtang/vitepress-theme-teek) 🚀
-- 通过以下二维码进行赞助，打赏作者一杯茶 🍵
-
-谢谢！❤️
-
-|                                                                 微信赞赏                                                                  |                                                               微信                                                                |                                                              支付宝                                                               |
-| :---------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
-| <img src="https://testingcf.jsdelivr.net/gh/Kele-Bingtang/static/vp-teek-cover/20250807010102.jpg" alt="WeChat Sponsor QRcode" width=180> | <img src="https://testingcf.jsdelivr.net/gh/Kele-Bingtang/static/vp-teek-cover/20250807010104.jpg" alt="WeChat QRcode" width=180> | <img src="https://testingcf.jsdelivr.net/gh/Kele-Bingtang/static/vp-teek-cover/20250807010106.jpg" alt="Alipay QRcode" width=180> |
-
-您的赞助将帮助 Teek：
-
-- 维护项目的基础设施
-- 投入更多时间进行开发
-- 提供更好的技术支持
-- 开发更多实用功能
-
-二维码没有正常显示？点 [这里](https://tbagr.com/personal.html) 😎
-
-## 致谢
-
-❤️ 感谢支持这个项目的朋友，您的每一份帮助都让这个项目变得更好！
-
-❤️ 感谢为这个项目贡献代码的朋友 → [Contributors](https://github.com/Kele-Bingtang/vitepress-theme-teek/graphs/contributors)
-
-## License
-
-[MIT](./LICENSE) License © 2025 [Teeker](https://github.com/Kele-Bingtang)

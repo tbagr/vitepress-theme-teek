@@ -100,35 +100,3 @@ Only some effect images are listed below. For more features, please visit [Offic
 ### Archive Page
 
 ![归档页](https://testingcf.jsdelivr.net/gh/Kele-Bingtang/static/vp-teek-cover/20250807004922.png)
-
-## 💖 Support This Project
-
-If you are using this project and feel it has helped you, or if you want to support my continued development, you can support me in any of the following ways:
-
-- Star and share [VitePress Theme Teek](https://github.com/Kele-Bingtang/vitepress-theme-teek) 🚀
-- Sponsor through the QR codes below, and buy the author a cup of tea 🍵
-
-Thank you! ❤️
-
-|                                                            WeChat Appreciation                                                            |                                                              WeChat                                                               |                                                              Alipay                                                               |
-| :---------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
-| <img src="https://testingcf.jsdelivr.net/gh/Kele-Bingtang/static/vp-teek-cover/20250807010102.jpg" alt="WeChat Sponsor QRcode" width=180> | <img src="https://testingcf.jsdelivr.net/gh/Kele-Bingtang/static/vp-teek-cover/20250807010104.jpg" alt="WeChat QRcode" width=180> | <img src="https://testingcf.jsdelivr.net/gh/Kele-Bingtang/static/vp-teek-cover/20250807010106.jpg" alt="Alipay QRcode" width=180> |
-
-Your sponsorship will help Teek:
-
-- Maintain project infrastructure
-- Invest more time in development
-- Provide better technical support
-- Develop more practical features
-
-QR codes not displaying properly? Click [here](https://tbagr.com/personal.html) 😎
-
-## Acknowledgements
-
-❤️ Thank you to friends who support this project. Your help makes this project better!
-
-❤️ Thank you to friends who contributed code to this project → [Contributors](https://github.com/Kele-Bingtang/vitepress-theme-teek/graphs/contributors)
-
-## License
-
-[MIT](./LICENSE) License © 2025 [Teeker](https://github.com/Kele-Bingtang)
