@@ -46,7 +46,6 @@ const {
 });
 
 onMounted(() => {
-  console.log(1);
   start();
 });
 

@@ -5,7 +5,7 @@
   "description": "vitepress-theme-teek 使用文档",
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev",
+    "dev": "vitepress dev --host",
     "build": "vitepress build",
     "preview": "vitepress preview",
     "baiduPush": "tsx .scripts/baiduPush.ts https://tbagr.com && bash .scripts/baiduPush.sh"
