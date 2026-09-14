@@ -20,12 +20,15 @@ const fullImgNavBarKey = "full-img-nav-bar";
 const ns = useNamespace("banner");
 const { t } = useLocale();
 
-const { getTeekConfigRef } = useTeekConfig();
+const { getTeekConfig, getTeekConfigRef } = useTeekConfig();
 const { frontmatter } = useData();
+
+// 是否启用博客风格首页，决定 Banner 默认壁纸模式：博客风格（teekHome）使用全屏图片（fullImg），否则使用局部图片（partImg）
+const teekHome = getTeekConfig<boolean>("teekHome", true);
 
 // Banner 配置项
 const bannerConfig = getTeekConfigRef<Required<Banner>>("banner", {
-  bgStyle: "partImg",
+  bgStyle: teekHome ? "fullImg" : "partImg",
   imgWaves: true,
   textColor: "#ffffff",
   titleFontSize: "3.2rem",

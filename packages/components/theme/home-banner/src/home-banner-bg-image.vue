@@ -10,11 +10,14 @@ defineOptions({ name: "HomeBannerBgImage" });
 
 const ns = useNamespace("banner-bg-image");
 const { t } = useLocale();
-const { getTeekConfigRef } = useTeekConfig();
+const { getTeekConfig, getTeekConfigRef } = useTeekConfig();
+
+// 是否启用博客风格首页，决定 Banner 默认壁纸模式：博客风格（teekHome）使用全屏图片（fullImg），否则使用局部图片（partImg）
+const teekHome = getTeekConfig<boolean>("teekHome", true);
 
 // Banner 配置项
 const bannerConfig = getTeekConfigRef<Required<Banner>>("banner", {
-  bgStyle: undefined,
+  bgStyle: teekHome ? "fullImg" : "partImg",
   imgSrc: undefined,
   imgInterval: 15000,
   imgShuffle: false,

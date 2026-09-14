@@ -205,7 +205,7 @@ const usedSlots = [
       v-show="!loading"
       :class="[
         ns.b(),
-        { [ns.m('hide-vp-home')]: !teekConfig.vpHome },
+        { [ns.m('hide-vp-home')]: !teekConfig.vpHome || teekConfig.teekHome },
         ns.has('sidebar-trigger', teekConfig.sidebarTrigger),
       ]"
     >

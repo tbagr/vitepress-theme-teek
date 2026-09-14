@@ -48,16 +48,19 @@ const namespace = "theme-setting";
 const teekConfig = ref<TeekConfig>({});
 const restoring = inject<ReturnType<typeof ref<boolean>>>("themeConfigRestoring", ref(false));
 
-const { theme } = useData();
+const { theme, frontmatter } = useData();
 
 const bannerImgSrc = theme.value.banner?.imgSrc;
 const bodyBgImgSrc = theme.value.bodyBgImg?.imgSrc;
+
+// 是否启用博客风格首页，决定首页壁纸模式的默认值：博客风格（teekHome）使用大图壁纸（fullImg），否则使用文档模式（doc）
+const teekHome = frontmatter.value.tk?.teekHome ?? theme.value.teekHome ?? true;
 
 const emit = defineEmits<{ change: [config: TeekConfig, type: ChangeType] }>();
 
 // 首页壁纸模式
 const bannerWallpaper = reactive<ThemeEnhanceConfig>({
-  modelValue: getStorage("wallpaper", "doc"),
+  modelValue: getStorage("wallpaper", teekHome ? "fullImg" : "doc"),
   title: "首页壁纸模式",
   options: [
     { value: "doc", label: "文档模式" },
