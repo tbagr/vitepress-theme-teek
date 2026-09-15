@@ -67,8 +67,8 @@ export const teekConfig = defineTeekConfig({
       name: `Theme By Teek@${version}`,
     },
     copyright: {
-      createYear: 2025,
-      suffix: "Teek",
+      createYear: "2023.03",
+      suffix: "By Tbagr",
     },
     customHtml: `<span id="runtime"></span>`, // 需要搭配 .vitepress/theme/helper/useRuntime.ts 使用
     topMessage: [
@@ -93,6 +93,16 @@ export const teekConfig = defineTeekConfig({
         <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT License">
       </a>`,
     ],
+    // ICP 备案信息配置
+    icpRecord: {
+      name: "皖ICP备2023005643号",
+      link: "https://beian.miit.gov.cn/",
+    },
+    // 网络安全备案信息配置
+    securityRecord: {
+      name: "皖公网安备34120402000424号",
+      link: "https://beian.mps.gov.cn/",
+    },
   },
   footerGroup: [
     {

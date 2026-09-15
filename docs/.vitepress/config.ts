@@ -8,7 +8,7 @@ import { version } from "../../packages/teek/version";
 // import { version } from "vitepress-theme-teek/es/version";
 
 const description = [
-  "欢迎来到 芙宁娜西妲 的世界",
+  "欢迎来到 芙宁娜西妲 的 提瓦特大陆",
   "前端开发技术分享站，分享前端技术笔记、实战经验与学习心得。学习，AI学习，Html学习，Css学习，JS学习，TS学习，Vue学习，Webpack学习，Vite学习，Uniapp学习，小程序学习，后端学习，Java学习，Tomcat学习，Nginx学习，Mysql学习，数据库学习，Linux学习，PHP学习，建站学习",
   "间或更新原神杂谈与日常随想，用代码构建世界。欢迎一起交流前端与生活。",
 ].toString();
@@ -16,7 +16,7 @@ const description = [
 // https://vitepress.dev/reference/site-config​
 export default defineConfig({
   extends: teekConfig,
-  title: "芙宁娜西妲 的世界",
+  title: "芙宁娜西妲 的 提瓦特大陆",
   description: description,
   cleanUrls: false,
   lastUpdated: true,
@@ -26,8 +26,8 @@ export default defineConfig({
     ["link", { rel: "icon", type: "image/png", href: "/teek-logo-mini.png" }],
     ["meta", { property: "og:type", content: "website" }],
     ["meta", { property: "og:locale", content: "zh-CN" }],
-    ["meta", { property: "og:title", content: "Tbagr | 芙宁娜西妲 的世界" }],
-    ["meta", { property: "og:site_name", content: "VitePress Theme Teek" }],
+    ["meta", { property: "og:title", content: "Tbagr | 芙宁娜西妲 的 提瓦特大陆" }],
+    ["meta", { property: "og:site_name", content: "The Teyvat of FuRiNaHiNa" }],
     ["meta", { property: "og:image", content: "https://tbagr.com/teek-logo-large.png" }],
     ["meta", { property: "og:url", content: "https://tbagr.com" }],
     ["meta", { property: "og:description", description }],

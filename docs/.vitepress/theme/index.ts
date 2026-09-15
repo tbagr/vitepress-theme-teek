@@ -1,4 +1,4 @@
-import Teek from "vitepress-theme-teek";
+import Teek, { useCopyBanner } from "vitepress-theme-teek";
 import TeekLayoutProvider from "./components/teek-layout-provider.vue";
 
 // Teek 本地主题包引用（与 Teek 在线主题包引用 二选一）
@@ -38,4 +38,17 @@ import "./styles/iframe.scss";
 export default {
   extends: Teek,
   Layout: TeekLayoutProvider,
+
+  setup: () => {
+    // 使用复制提示功能（默认配置）
+    useCopyBanner("你复制了哦! 被我发现呢~ 一定要标注本文来源哦!", 5000);
+
+    /**
+     * 配置方式，可自定义提示语
+     *
+     * 1. 提示语。默认:复制成功，复制和转载请标注本文地址
+     * 2. 显示的持续时间(毫秒)，默认 3000
+     */
+    // useCopyBanner("复制成功", 4000);
+  },
 };

@@ -78,9 +78,9 @@ export const useRuntime = (initDate: MaybeRef<string>, options: UseRuntimeOption
 
     runtimeElement.innerHTML = `${prefix}
         <span style="color: ${dayColor}">${days}</span> 天
-        <span style="color: ${hourColor}">${hours}</span> 时
-        <span style="color: ${minuteColor}">${minutes}</span> 分
-        <span style="color: ${secondColor}">${seconds}</span> 秒
+        <span style="color: ${hourColor}">${String(hours).padStart(2, "0")}</span> 时
+        <span style="color: ${minuteColor}">${String(minutes).padStart(2, "0")}</span> 分
+        <span style="color: ${secondColor}">${String(seconds).padStart(2, "0")}</span> 秒
         ${suffix}
       `;
   };

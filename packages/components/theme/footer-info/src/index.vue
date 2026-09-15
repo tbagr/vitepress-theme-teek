@@ -15,6 +15,7 @@ const ns = useNamespace("footer-info");
 const { t } = useLocale();
 
 const { getTeekConfigRef } = useTeekConfig();
+console.log(getTeekConfigRef());
 
 const footerInfo = getTeekConfigRef<FooterInfo>("footerInfo", {});
 const social = getTeekConfigRef<Social[]>("social", []);
@@ -27,7 +28,7 @@ const footerData = computed(() => {
     data.push({
       name: "Theme By Teek",
       icon: themeIcon,
-      link: "https://github.com/tbagr/vitepress-theme-teek",
+      link: "https://github.com/Kele-Bingtang/vitepress-theme-teek",
       // 可覆盖上面的配置项
       ...theme,
     });

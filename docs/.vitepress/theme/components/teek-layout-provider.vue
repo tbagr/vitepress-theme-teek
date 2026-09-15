@@ -12,8 +12,8 @@ import ThemeConfig, { type ChangeType } from "./theme-config.vue";
 
 const { frontmatter } = useData();
 
-// 默认文档风
-const currentStyle = ref("doc");
+// 首页banner默认大屏壁纸风格
+const currentStyle = ref("fullImg");
 const teekConfig = ref<TeekConfig>({});
 provide(teekConfigContext, teekConfig);
 
@@ -24,8 +24,8 @@ provide("themeConfigRestoring", restoring);
 // 彩带背景
 const { start: startRibbon, stop: stopRibbon } = useRibbon({ immediate: false, clickReRender: true });
 // 页脚运行时间
-const { start: startRuntime, stop: stopRuntime } = useRuntime("2021-10-19 00:00:00", {
-  prefix: `<span style="width: 16px; display: inline-block; vertical-align: -3px; margin-right: 3px;">${clockIcon}</span>小破站已运行 `,
+const { start: startRuntime, stop: stopRuntime } = useRuntime("2023-03-27 13:04:13", {
+  prefix: `<span style="width: 16px; display: inline-block; vertical-align: -3px; margin-right: 3px;">${clockIcon}</span>提瓦特大陆已存在 `,
 });
 
 // 监听运行时间
