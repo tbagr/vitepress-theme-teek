@@ -9,14 +9,14 @@ import { version } from "../../packages/teek/version";
 
 const description = [
   "欢迎来到 芙宁娜西妲 的世界",
-  "Teek 是一个基于 VitePress 构建的主题，是在默认主题的基础上进行拓展，支持 VitePress 的所有功能、配置",
-  "Teek 拥有三种典型的知识管理形态：结构化、碎片化、体系化，可以轻松构建一个结构化知识库，适用个人博客、文档站、知识库等场景",
+  "前端开发技术分享站，分享前端技术笔记、实战经验与学习心得。学习，AI学习，Html学习，Css学习，JS学习，TS学习，Vue学习，Webpack学习，Vite学习，Uniapp学习，小程序学习，后端学习，Java学习，Tomcat学习，Nginx学习，Mysql学习，数据库学习，Linux学习，PHP学习，建站学习",
+  "间或更新原神杂谈与日常随想，用代码构建世界。欢迎一起交流前端与生活。",
 ].toString();
 
 // https://vitepress.dev/reference/site-config​
 export default defineConfig({
   extends: teekConfig,
-  title: "芙宁娜西妲 的世界​​",
+  title: "芙宁娜西妲 的世界",
   description: description,
   cleanUrls: false,
   lastUpdated: true,
@@ -31,8 +31,6 @@ export default defineConfig({
     ["meta", { property: "og:image", content: "https://tbagr.com/teek-logo-large.png" }],
     ["meta", { property: "og:url", content: "https://tbagr.com" }],
     ["meta", { property: "og:description", description }],
-    ["meta", { name: "description", description }],
-    ["meta", { name: "author", content: "Teeker" }],
     // 禁止浏览器缩放
     // [
     //   "meta",
@@ -41,8 +39,10 @@ export default defineConfig({
     //     content: "width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no",
     //   },
     // ],
+    ["meta", { name: "author", content: "Tbagr" }],
+    ["meta", { name: "description", description }],
     ["meta", { name: "keywords", description }],
-    ["meta", { name: "baidu-site-verification", content: "codeva-GdK2q9MO1i" }], // 百度收录
+    ["meta", { name: "baidu-site-verification", content: "codeva-pwbE7jutKG" }], // 百度收录
     ["meta", { name: "msvalidate.01", content: "48CABE70F538B8D117567176ABF325AF" }], // Bing 收录验证
     ["script", { charset: "UTF-8", id: "LA_COLLECT", src: "//sdk.51.la/js-sdk-pro.min.js" }], // 51.la
     [

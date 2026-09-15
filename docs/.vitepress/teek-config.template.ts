@@ -89,7 +89,7 @@ export const teekConfig = defineTeekConfig({
   },
   // 文章默认的作者信息
   author: {
-    name: "TkSidebarTriggerInstance", // 作者名称
+    name: "Tbagr", // 作者名称
     link: "https://github.com/tbagr", // 点击作者名称后跳转的链接
   },
   // 公告配置
@@ -100,7 +100,7 @@ export const teekConfig = defineTeekConfig({
     duration: 0, // 弹框定时自动关闭，0 不自动消失
     mobileMinify: false, // 移动端自动最小化
     reopen: true,
-    useStorage: true, // 是是否使用 localStorage 存储公告状态，如：当打开公告弹框后，下次进来则自动打开弹框
+    useStorage: true, // 是否使用 localStorage 存储公告状态，如：当打开公告弹框后，下次进来则自动打开弹框
     twinkle: false, // 公告图标是否打开闪烁提示
     position: "top", // 公告弹框出现位置
     // ...
@@ -114,7 +114,7 @@ export const teekConfig = defineTeekConfig({
   // 首页 Banner 配置，位于首页顶部
   banner: {
     enabled: true, // 是否启用 Banner
-    name: "Teek", // Banner 标题，默认读取 vitepress 的 title 属性
+    name: "Tbagr", // Banner 标题，默认读取 vitepress 的 title 属性
     bgStyle: "fullImg", // Banner 背景风格：pure 为纯色背景，partImg 为局部图片背景，fullImg 为全屏图片背景
     pureBgColor: "#28282d", // Banner 背景色，bgStyle 为 pure 时生效
     imgSrc: ["/img/bg1.jpg", "/img/bg2.png"], // Banner 图片链接。bgStyle 为 partImg 或 fullImg 时生效
@@ -240,10 +240,10 @@ export const teekConfig = defineTeekConfig({
     enabled: true, // 是否启用友情链接卡片
     list: [
       {
-        name: "Teeker",
-        desc: "朝圣的使徒，正在走向编程的至高殿堂！",
-        avatar: "https://testingcf.jsdelivr.net/gh/Kele-Bingtang/static/user/avatar2.png",
-        link: "http://notes.teek.top/",
+        name: "Tbagr",
+        desc: "再见，那维莱特。希望你喜欢这五百年来属于你的戏份！",
+        avatar: "https://www.tbagr.com/teek-logo-large.png",
+        link: "http://tbagr.com/",
       },
     ], // 友情链接数据列表
     title: "${icon}友情链接", // 卡片标题
@@ -328,18 +328,18 @@ export const teekConfig = defineTeekConfig({
     // 博客版权配置
     copyright: {
       show: true, // 是否显示博客版权
-      createYear: 2021, // 创建年份
-      suffix: "天客 Blog", // 后缀
+      createYear: 2023, // 创建年份
+      suffix: "Tbagr Blog", // 后缀
     },
     // ICP 备案信息配置
     icpRecord: {
-      name: "桂ICP备2021009994号",
-      link: "http://beian.miit.gov.cn/",
+      name: "皖ICP备2023005643号",
+      link: "https://beian.miit.gov.cn/",
     },
     // 网络安全备案信息配置
     securityRecord: {
-      name: "",
-      link: "",
+      name: "皖公网安备34120402000424号",
+      link: "https://beian.mps.gov.cn/",
     },
   },
   articleBanner: {
