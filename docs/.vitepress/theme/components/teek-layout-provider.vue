@@ -12,8 +12,6 @@ import ThemeConfig, { type ChangeType } from "./theme-config.vue";
 
 const { frontmatter } = useData();
 
-// 首页banner默认大屏壁纸风格
-const currentStyle = ref("fullImg");
 const teekConfig = ref<TeekConfig>({});
 provide(teekConfigContext, teekConfig);
 
@@ -29,18 +27,13 @@ const { start: startRuntime, stop: stopRuntime } = useRuntime("2023-03-27 13:04:
 });
 
 // 监听运行时间
-const watchRuntime = async (layout: string, style: string) => {
-  const isHome = layout === "home";
-  const isDoc = [undefined, "doc"].includes(layout);
-  const isBlog = style.startsWith("blog");
-
-  // 博客类风格的首页显示运行时间
+const watchRuntime = async (layout: string) => {
+  // 首页显示运行时间
   await nextTick();
-  if (isHome && isBlog) startRuntime();
-  else stopRuntime();
+  layout === "home" ? startRuntime() : stopRuntime();
 };
 
-watch(frontmatter, newVal => setTimeout(() => watchRuntime(newVal.layout, currentStyle.value), 700), {
+watch(frontmatter, newVal => setTimeout(() => watchRuntime(newVal.layout), 700), {
   immediate: true,
   flush: "post",
 });
@@ -54,8 +47,7 @@ const handleThemeConfigChange = (config: TeekConfig, type: ChangeType, silent?: 
     teekConfig.value.banner = { ...teekConfig.value.banner, ...config.banner };
     teekConfig.value.bodyBgImg = { ...teekConfig.value.bodyBgImg, ...config.bodyBgImg };
 
-    if (config.teekHome) setTimeout(() => watchRuntime(frontmatter.value.layout, "blog"), 700);
-    else setTimeout(() => watchRuntime(frontmatter.value.layout, ""), 700);
+    watchRuntime(frontmatter.value.layout, "blog");
   }
   // 首页描述切换模式
   else if (type === "bannerDescStyle") teekConfig.value.banner = { ...teekConfig.value.banner, ...config.banner };
