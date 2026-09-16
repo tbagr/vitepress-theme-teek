@@ -345,7 +345,7 @@ onMounted(() => {
 
   // bannerWallpaper
   const wallpaperVal = saved("wallpaper");
-  if (wallpaperVal && wallpaperVal !== "doc") {
+  if (wallpaperVal) {
     bannerWallpaper.change(wallpaperVal);
   }
 
