@@ -27,11 +27,11 @@ provide(teekConfigContext, {
     topMessage: ["下面的内容和图标都可以修改（本条内容也可以隐藏的）"],
     bottomMessage: ["上面的内容和图标都可以修改（本条内容也可以隐藏的）"],
     copyright: {
-      createYear: 2021,
-      suffix: "天客 Blog",
+      createYear: 2023,
+      suffix: "Tbagr Blog",
     },
     icpRecord: {
-      name: "桂ICP备2021009994号",
+      name: "皖ICP备2023005643号",
       link: "http://beian.miit.gov.cn/",
     },
     customHtml: `<span style="color: var(--tk-theme-color)">自定义标签内容</span>`,
