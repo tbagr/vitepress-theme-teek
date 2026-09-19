@@ -27,9 +27,9 @@ export function VitePluginVitePressAutoPermalink(option: PermalinkOption = {}): 
 
   return {
     name: "vite-plugin-vitepress-auto-permalink",
-    config(config: any) {
-      // 防止 vitepress build 时重复执行
-      if (isExecute) return;
+    config(config: any, env: { command: string }) {
+      // 防止 vitepress build 时重复执行（build 阶段会被调用两次：client + SSG）；serve 下允许重复执行以支持热更新
+      if (isExecute && env.command === "build") return;
       isExecute = true;
 
       const {
@@ -193,7 +193,7 @@ const getDirname = () => {
  * 2、将 NotFoundDelay 组件传入 VitePress 的 not-found 插槽
  */
 export function VitePluginVitePressUsePermalink(option: PermalinkOption = {}): Plugin & { name: string } {
-  const usePermalinkFile = `use-permalink`;
+  const usePermalinkFile = "usePermalink";
   const aliasUsePermalinkFile = `${getDirname()}/${usePermalinkFile}`;
 
   const NotFoundDelayComponentName = "NotFoundDelay";

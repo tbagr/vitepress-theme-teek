@@ -18,7 +18,7 @@ export default defineConfig({
   extends: teekConfig,
   title: "芙宁娜西妲 的 提瓦特大陆",
   description: description,
-  cleanUrls: false,
+  cleanUrls: true,
   lastUpdated: true,
   lang: "zh-CN",
   head: [
@@ -82,6 +82,7 @@ export default defineConfig({
   },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    // siteTitle: 'My Custom Title', // 等同上面的title参数
     logo: "/teek-logo-mini.svg",
     darkModeSwitchLabel: "主题",
     sidebarMenuLabel: "菜单",
@@ -151,7 +152,7 @@ export default defineConfig({
         ],
       },
     ],
-    // socialLinks: [{ icon: "github", link: "https://github.com/tbagr/vitepress-theme-teek" }],
+    socialLinks: [{ icon: "github", link: "https://github.com/tbagr/vitepress-theme-teek" }],
     search: {
       provider: "algolia",
       options: {

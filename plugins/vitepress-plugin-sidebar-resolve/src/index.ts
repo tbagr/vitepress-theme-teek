@@ -17,13 +17,19 @@ export default function VitePluginVitePressSidebarResolve(option: SidebarOption 
     configureServer({ watcher, restart }: ViteDevServer) {
       if (!option.restart) return;
 
-      watcher.add("*.md");
+      watcher.add("**/*.md");
       // 监听文件系统事件
       watcher
         .on("add", async path => {
           // 过滤非 .md 文件
           if (!path.endsWith(".md")) return;
           // 重启服务器来更新侧边栏
+          await restart();
+        })
+        .on("change", async path => {
+          // 过滤非 .md 文件
+          if (!path.endsWith(".md")) return;
+          // 修改（如 frontmatter 变更）也重启服务器来更新侧边栏
           await restart();
         })
         .on("unlink", async path => {
@@ -33,9 +39,9 @@ export default function VitePluginVitePressSidebarResolve(option: SidebarOption 
           await restart();
         });
     },
-    config(config: any) {
-      // 防止 vitepress build 时重复执行
-      if (isExecute) return;
+    config(config: any, env: { command: string }) {
+      // 防止 vitepress build 时重复执行（build 阶段会被调用两次：client + SSG）
+      if (isExecute && env.command === "build") return;
       isExecute = true;
 
       const {

@@ -60,6 +60,7 @@ export const teekConfig = defineTeekConfig({
     sidebarOption: {
       initItems: false,
       ignoreIndexMd: true,
+      restart: true,
     },
   },
   footerInfo: {

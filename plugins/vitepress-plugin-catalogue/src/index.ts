@@ -12,9 +12,9 @@ export default function VitePluginVitePressCatalogue(option: CatalogueOption = {
 
   return {
     name: "vite-plugin-vitepress-catalogue",
-    config(config: any) {
-      // 防止 vitepress build 时重复执行
-      if (isExecute) return;
+    config(config: any, env: { command: string }) {
+      // 防止 vitepress build 时重复执行（build 阶段会被调用两次：client + SSG）；serve 下允许重复执行以支持热更新
+      if (isExecute && env.command === "build") return;
       isExecute = true;
 
       const {

@@ -16,9 +16,9 @@ export default function VitePluginVitePressAutoFrontmatter(
 
   return {
     name: "vitepress-plugin-auto-frontmatter",
-    async config(config: any) {
-      // 防止 vitepress build 时重复执行
-      if (isExecute) return;
+    async config(config: any, env: { command: string }) {
+      // 防止 vitepress build 时重复执行（build 阶段会被调用两次：client + SSG）；serve 下允许重复执行以支持热更新
+      if (isExecute && env.command === "build") return;
       isExecute = true;
 
       let { pattern } = option;
