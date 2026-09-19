@@ -91,7 +91,31 @@ export function VitePluginVitePressAutoPermalink(option: PermalinkOption = {}): 
       });
     },
     // 仅限 dev 环境生效
-    configureServer(server: ViteDevServer) {
+    configureServer({ watcher, restart, middlewares }: ViteDevServer) {
+      // 监听 .md 文件的新增、删除、修改（如 permalink 属性变更），重启 dev server 实时重新注入 permalink 数据
+      if (option.restart !== false) {
+        watcher.add("**/*.md");
+        watcher
+          .on("add", async (path: string) => {
+            // 过滤非 .md 文件
+            if (!path.endsWith(".md")) return;
+            // 新增 .md 文件，重启服务器来更新 permalink
+            await restart();
+          })
+          .on("change", async (path: string) => {
+            // 过滤非 .md 文件
+            if (!path.endsWith(".md")) return;
+            // 修改（如 permalink 属性变更）也重启服务器来更新 permalink
+            await restart();
+          })
+          .on("unlink", async (path: string) => {
+            // 过滤非 .md 文件
+            if (!path.endsWith(".md")) return;
+            // 删除 .md 文件，重启服务器来更新 permalink
+            await restart();
+          });
+      }
+
       const {
         site: {
           base,
@@ -102,7 +126,7 @@ export function VitePluginVitePressAutoPermalink(option: PermalinkOption = {}): 
       if (!permalinks) return;
 
       // 将 permalink 重写实际文件路径
-      server.middlewares.use((req, _res, next) => {
+      middlewares.use((req, _res, next) => {
         if (req.url && req.url.includes(".md")) {
           const reqUrl = decodeURI(req.url)
             .replace(/[?#].*$/, "")

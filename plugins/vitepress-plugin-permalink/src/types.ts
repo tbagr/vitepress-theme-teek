@@ -10,6 +10,12 @@ export interface PermalinkOption {
    * @default 'vitepress 的 srcDir 配置项'
    */
   path?: string;
+  /**
+   * dev 环境下监听 .md 文件的新增、删除、修改（如 permalink 属性变更），实时重启 dev server 重新注入 permalink 数据
+   *
+   * @default true
+   */
+  restart?: boolean;
 }
 
 export interface Permalink {

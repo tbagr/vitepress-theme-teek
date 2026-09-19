@@ -42,6 +42,7 @@ export default defineConfig({
     ["meta", { name: "author", content: "Tbagr" }],
     ["meta", { name: "description", description }],
     ["meta", { name: "keywords", description }],
+    ["meta", { name: "algolia-site-verification", content: "4E82843E310768DD" }], // algolia 收录验证
     ["meta", { name: "baidu-site-verification", content: "codeva-pwbE7jutKG" }], // 百度收录
     ["meta", { name: "msvalidate.01", content: "48CABE70F538B8D117567176ABF325AF" }], // Bing 收录验证
     ["script", { charset: "UTF-8", id: "LA_COLLECT", src: "//sdk.51.la/js-sdk-pro.min.js" }], // 51.la
@@ -161,10 +162,10 @@ export default defineConfig({
         indexName: "vitepress_theme_teek",
       },
     },
-    // editLink: {
-    //   text: "在 GitHub 上编辑此页",
-    //   pattern: "https://github.com/tbagr/vitepress-theme-teek/edit/master/docs/:path",
-    // },
+    editLink: {
+      text: "在 GitHub 上编辑此页",
+      pattern: "https://github.com/tbagr/vitepress-theme-teek/edit/tbagr/docs/:path",
+    },
   },
   vite: {
     plugins: [llmstxt() as any],
