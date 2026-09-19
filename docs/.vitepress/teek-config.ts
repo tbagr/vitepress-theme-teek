@@ -41,7 +41,7 @@ export const teekConfig = defineTeekConfig({
     hideBanner: true,
   },
   docAnalysis: {
-    createTime: "2025-03-23",
+    createTime: "2023-03-27",
     statistics: {
       provider: "busuanzi",
     },

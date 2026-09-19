@@ -1,6 +1,6 @@
 <script setup lang="ts" name="TeekLayoutProvider">
 import type { TeekConfig } from "vitepress-theme-teek";
-import Teek, { teekConfigContext, clockIcon, TkMessage } from "vitepress-theme-teek";
+import Teek, { zhCn, en, teekConfigContext, clockIcon, TkMessage } from "vitepress-theme-teek";
 import { useData } from "vitepress";
 import { watch, nextTick, ref, provide } from "vue";
 import { useRibbon } from "../composables/use-ribbon";
@@ -9,8 +9,14 @@ import ContributeChart from "./contribute-chart.vue";
 import NotFound from "./404.vue";
 import CalendarCard from "./calendar-card.vue";
 import ThemeConfig, { type ChangeType } from "./theme-config.vue";
+import { computed } from "vue";
 
-const { frontmatter } = useData();
+const { lang, frontmatter } = useData();
+
+const locale = computed(() => {
+  if (lang.value === "zh-CN") return zhCn;
+  return en;
+});
 
 const teekConfig = ref<TeekConfig>({});
 provide(teekConfigContext, teekConfig);
@@ -47,7 +53,7 @@ const handleThemeConfigChange = (config: TeekConfig, type: ChangeType, silent?: 
     teekConfig.value.banner = { ...teekConfig.value.banner, ...config.banner };
     teekConfig.value.bodyBgImg = { ...teekConfig.value.bodyBgImg, ...config.bodyBgImg };
 
-    watchRuntime(frontmatter.value.layout, "blog");
+    watchRuntime(frontmatter.value.layout);
   }
   // 首页描述切换模式
   else if (type === "bannerDescStyle") teekConfig.value.banner = { ...teekConfig.value.banner, ...config.banner };
@@ -88,7 +94,7 @@ const handleThemeConfigChange = (config: TeekConfig, type: ChangeType, silent?: 
 </script>
 
 <template>
-  <Teek.Layout>
+  <Teek.Layout :locale>
     <template #teek-theme-enhance-bottom>
       <ThemeConfig @change="handleThemeConfigChange" />
     </template>
