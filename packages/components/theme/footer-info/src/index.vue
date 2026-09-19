@@ -3,10 +3,11 @@ import type { FooterInfo, Social } from "@teek/config";
 import { computed } from "vue";
 import { withBase } from "vitepress";
 import { useNamespace, useLocale } from "@teek/composables";
-import { themeIcon, copyrightIcon, icpRecordIcon } from "@teek/static";
+import { themeIcon, copyrightIcon } from "@teek/static";
 import { useTeekConfig } from "@teek/components/theme/config-provider";
 import { TkIcon } from "@teek/components/common/icon";
 // @ts-ignore
+import icpRecordImg from "@teek/static/img/icp-record.png";
 import securityRecordImg from "@teek/static/img/security-record.png";
 
 defineOptions({ name: "FooterInfo" });
@@ -45,7 +46,7 @@ const footerData = computed(() => {
   }
 
   // 3.ICP 备案信息
-  if (icpRecord) data.push({ icon: icpRecordIcon, ...icpRecord });
+  if (icpRecord) data.push({ icon: icpRecordImg, ...icpRecord });
 
   // 4.网络安全备案信息
   if (securityRecord) {

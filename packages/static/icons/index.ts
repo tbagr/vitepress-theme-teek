@@ -6,7 +6,6 @@ export { default as copyrightIcon } from "./copyright";
 export { default as docAnalysisIcon } from "./doc-analysis";
 export { default as emptyIcon } from "./empty";
 export { default as friendLinkIcon } from "./friend-link";
-export { default as icpRecordIcon } from "./icp-record";
 export { default as noticeIcon } from "./notice";
 export { default as playgroundIcon } from "./playground";
 export { default as rocketIcon } from "./rocket";
