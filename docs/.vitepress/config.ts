@@ -158,9 +158,9 @@ export default defineConfig({
     search: {
       provider: "algolia",
       options: {
-        appId: "2LFTZ9LKO9",
-        apiKey: "017332fa7dc0bbe5e1637b215f92a5d1",
-        indexName: "vitepress_theme_teek",
+        appId: "PVZGF0QOQ6",
+        apiKey: "b863d252881b9122d2c3bc7d8710da59",
+        indexName: "tbagr_blog_pages",
       },
     },
     editLink: {
