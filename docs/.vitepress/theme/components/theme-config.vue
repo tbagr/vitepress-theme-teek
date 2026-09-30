@@ -266,7 +266,6 @@ const bannerImgWaves = reactive({
     { value: false, label: "OFF" },
   ],
   change(value: boolean) {
-    console.log(value);
     bannerImgWaves.modelValue = value;
     setStorage("imgWaves", value);
     teekConfig.value.banner = { ...teekConfig.value.banner };

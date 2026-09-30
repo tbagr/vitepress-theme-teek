@@ -6,7 +6,6 @@ import { useNamespace, useLocale } from "@teek/composables";
 import { themeIcon, copyrightIcon } from "@teek/static";
 import { useTeekConfig } from "@teek/components/theme/config-provider";
 import { TkIcon } from "@teek/components/common/icon";
-// @ts-ignore
 import icpRecordImg from "@teek/static/img/icp-record.png";
 import securityRecordImg from "@teek/static/img/security-record.png";
 
@@ -16,7 +15,6 @@ const ns = useNamespace("footer-info");
 const { t } = useLocale();
 
 const { getTeekConfigRef } = useTeekConfig();
-console.log(getTeekConfigRef());
 
 const footerInfo = getTeekConfigRef<FooterInfo>("footerInfo", {});
 const social = getTeekConfigRef<Social[]>("social", []);

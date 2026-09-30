@@ -19,3 +19,39 @@ declare module "*.css" {
   const css: Record<string, string>;
   export default css;
 }
+
+// 图片资源，由 Vite 编译成资源 URL，所以默认导出是字符串
+declare module "*.png" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.jpg" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.jpeg" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.gif" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.svg" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.webp" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.avif" {
+  const src: string;
+  export default src;
+}
