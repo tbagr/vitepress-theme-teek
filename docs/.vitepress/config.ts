@@ -101,6 +101,23 @@ export default defineConfig({
     nav: [
       { text: "首页", link: "/" },
       {
+        text: "五笔",
+        items: [
+          {
+            text: "五笔86",
+            link: "/86wubi",
+          },
+          {
+            text: "五笔08",
+            link: "/08wubi",
+          },
+          {
+            text: "虎码",
+            link: "/tiger-code",
+          },
+        ],
+      },
+      {
         text: "文档",
         items: [
           {

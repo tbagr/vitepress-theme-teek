@@ -37,6 +37,9 @@ import { TkCataloguePage } from "@teek/components/theme/page-catalogue";
 import { TkArticleOverviewPage } from "@teek/components/theme/page-article-overview";
 import { TkLoginPage, useWatchLogin } from "@teek/components/theme/page-login";
 import { TkRiskLinkPage, useRiskLink } from "@teek/components/theme/page-risk-link";
+import { TkWubi08Page } from "@teek/components/theme/page-08wubi";
+import { TkWubi86Page } from "@teek/components/theme/page-86wubi";
+import { TkTigerCodePage } from "@teek/components/theme/page-tiger-code";
 import { TkSidebarTrigger } from "@teek/components/theme/sidebar-trigger";
 import { TkHomeFeature } from "@teek/components/theme/home-feature";
 import { TkRouteLoading } from "@teek/components/theme/route-loading";
@@ -183,6 +186,15 @@ const usedSlots = [
     </template>
     <template v-if="frontmatter.riskLinkPage === true">
       <slot name="teek-risk-link-page"><TkRiskLinkPage v-show="!loading" /></slot>
+    </template>
+    <template v-if="frontmatter.wubi08Page === true">
+      <slot name="teek-wubi08-page"><TkWubi08Page v-show="!loading" /></slot>
+    </template>
+    <template v-if="frontmatter.wubi86Page === true">
+      <slot name="teek-wubi86-page"><TkWubi86Page v-show="!loading" /></slot>
+    </template>
+    <template v-if="frontmatter.tigerCodePage === true">
+      <slot name="teek-tiger-code-page"><TkTigerCodePage v-show="!loading" /></slot>
     </template>
 
     <template v-if="frontmatter.layout !== false">

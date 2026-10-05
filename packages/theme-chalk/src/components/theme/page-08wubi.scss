@@ -1,0 +1,258 @@
+@use "../../mixins/bem" as *;
+@use "../../mixins/function" as *;
+@use "../../mixins/mixins" as *;
+
+:root {
+  /* 配色刻意不跟随主题：练习区要保持浅底，绿/红高亮只有在浅底上才读得清 */
+  @include set-css-var(wubi08-bg-color, #f6f7f9);
+  @include set-css-var(wubi08-panel-color, #ffffff);
+  @include set-css-var(wubi08-text-color, #2b3138);
+  @include set-css-var(wubi08-muted-color, #8a949e);
+  @include set-css-var(wubi08-border-color, #e3e7eb);
+  @include set-css-var(wubi08-accent-color, #00a7ea);
+  @include set-css-var(wubi08-danger-color, #e5484d);
+  @include set-css-var(wubi08-char-correct-bg, #9dffb9);
+  @include set-css-var(wubi08-char-error-bg, #ffb3b3);
+
+  /* 排版度量：目标层与输入层共用，改这里等于同时改两层 */
+  @include set-css-var(wubi08-font-family, #{"Consolas, Cascadia Mono, Microsoft Yahei, monospace"});
+  @include set-css-var(wubi08-font-size, clamp(16px, 2.1vw, 24px));
+  @include set-css-var(wubi08-line-height, 2.5);
+  @include set-css-var(wubi08-padding, clamp(10px, 1.4vw, 18px));
+}
+
+@include b(wubi08) {
+  box-sizing: border-box;
+  max-width: 1200px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: clamp(12px, 2vw, 28px);
+  background: getCssVar(wubi08-bg-color);
+  color: getCssVar(wubi08-text-color);
+  font-family: getCssVar(wubi08-font-family);
+
+  & *,
+  & *::before,
+  & *::after {
+    box-sizing: border-box;
+  }
+
+  @include e(bar) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  @include e(control) {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 200px;
+  }
+
+  @include e(label) {
+    font-size: 12px;
+    color: getCssVar(wubi08-muted-color);
+  }
+
+  @include e(select) {
+    padding: 6px 10px;
+    border: 1px solid getCssVar(wubi08-border-color);
+    border-radius: 6px;
+    background: getCssVar(wubi08-panel-color);
+    color: inherit;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  @include e(stats) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin: 0;
+  }
+
+  @include e(stat) {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+
+    dt {
+      font-size: 12px;
+      color: getCssVar(wubi08-muted-color);
+    }
+
+    dd {
+      margin: 0;
+      font-size: 15px;
+      font-variant-numeric: tabular-nums;
+
+      &.is-bad {
+        color: getCssVar(wubi08-danger-color);
+      }
+    }
+
+    small {
+      margin-left: 2px;
+      font-size: 11px;
+      font-weight: 400;
+      color: getCssVar(wubi08-muted-color);
+    }
+  }
+
+  @include e(progress) {
+    height: 3px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: getCssVar(wubi08-border-color);
+  }
+
+  @include e(progress-fill) {
+    height: 100%;
+    background: getCssVar(wubi08-accent-color);
+    transition: width 0.15s ease-out;
+  }
+
+  /* 滚动容器：目标层与输入层一起滚 */
+  @include e(field) {
+    /* 压低练字区高度，把视口让给下方字根表，保证字根表完整可见、无需页面滚动 */
+    height: clamp(150px, 28vh, 320px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 1px solid getCssVar(wubi08-border-color);
+    border-radius: 10px;
+    background: getCssVar(wubi08-panel-color);
+    cursor: text;
+
+    /* 输入层获得焦点时给外框一个提示色 */
+    &:focus-within {
+      border-color: getCssVar(wubi08-accent-color);
+    }
+  }
+
+  /*
+   * 度量基准：canvas 只负责把字体、行高与换行规则定下来，
+   * 两层子元素全部 font: inherit 加同样的 padding / border，任何一边改动都会同步生效。
+   */
+  @include e(canvas) {
+    position: relative;
+    font-family: inherit;
+    font-size: getCssVar(wubi08-font-size);
+    line-height: getCssVar(wubi08-line-height);
+    font-variant-ligatures: none;
+    text-align: left;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    tab-size: 4;
+  }
+
+  /* 两层共享的排版规则：必须逐条一致，否则高亮会整体错位 */
+  &__target,
+  &__input {
+    width: 100%;
+    margin: 0;
+    padding: getCssVar(wubi08-padding);
+    border: 0;
+    font: inherit;
+    letter-spacing: inherit;
+    text-align: inherit;
+    word-break: inherit;
+    overflow-wrap: inherit;
+    white-space: inherit;
+    tab-size: inherit;
+  }
+
+  @include e(target) {
+    position: relative;
+    min-height: 100%;
+  }
+
+  /* 未输入的目标字用浅灰提示；已输入的位置交还给输入层显示真实字符 */
+  @include e(char) {
+    &[data-state="pending"] {
+      color: getCssVar(wubi08-muted-color);
+    }
+
+    &[data-state="correct"] {
+      color: transparent;
+      background: getCssVar(wubi08-char-correct-bg);
+    }
+
+    &[data-state="error"] {
+      color: transparent;
+      background: getCssVar(wubi08-char-error-bg);
+    }
+  }
+
+  @include e(input) {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    overflow: hidden;
+    resize: none;
+    background: transparent;
+    color: getCssVar(wubi08-text-color);
+    caret-color: getCssVar(wubi08-accent-color);
+    outline: none;
+  }
+
+  @include e(hint) {
+    margin: 10px 0 0;
+    font-size: 12px;
+    color: getCssVar(wubi08-muted-color);
+
+    kbd {
+      padding: 1px 5px;
+      border: 1px solid getCssVar(wubi08-border-color);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      background: getCssVar(wubi08-panel-color);
+      font-family: inherit;
+      font-size: 11px;
+    }
+  }
+
+  @include e(chart) {
+    margin: 18px 0 0;
+
+    figcaption {
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: getCssVar(wubi08-muted-color);
+    }
+
+    img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      /* 限高并等比缩放：保证整张字根表在视口内完整可见，不被裁切 */
+      max-height: min(40vh, 520px);
+      margin: 0 auto;
+      border: 1px solid getCssVar(wubi08-border-color);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+  }
+
+  @media (max-width: 640px) {
+    @include e(bar) {
+      align-items: stretch;
+    }
+
+    @include e(control) {
+      width: 100%;
+    }
+
+    @include e(stats) {
+      gap: 6px 12px;
+    }
+  }
+}

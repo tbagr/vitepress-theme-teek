@@ -1,0 +1,1135 @@
+// 虎码字根练习页面样式
+//
+// 由 legacy `docs/public/tiger-code-exercise/styles/index.css` 移植。
+//
+// 移植要点：
+// 1. legacy 把配色变量定义在 `:root` 与 `body.theme-*` 上，组件直接挂在站点里会污染
+//    整个 VitePress 主题，因此全部收敛到 `.tk-tiger-code` 作用域内。
+// 2. legacy 的 `body` 承担了页面容器职责（背景、居中、字体、内边距），
+//    这里由 `.tk-tiger-code` 自身接管。
+// 3. 剔除了 legacy 中对应不到任何元素的死选择器（`.subtitle`、`.status`、`.root-box`、
+//    `.root-label`、`.input-area`、`.input-label`、`.meta`、`.tag`、`.footer-hint`、
+//    `.stat-attempts`、`.stat-correct`）。
+// 4. 备案图标复用 `@teek/static/img/` 下已有的 `icp-record.png` / `security-record.png`。
+
+/* 字形字体：罕见字与 PUA 私有区码位依赖这些字体，缺失会导致根字形显示为豆腐块
+ *
+ * 路径说明：这里必须用 publicDir 的绝对路径，不能用 SCSS 相对路径。
+ * 本文件是通过 `index.scss` 的 `@use` 被引入的，Sass 会把 `@use` 的产物拍平到入口文件，
+ * 于是 Vite 解析 `url()` 时会以 `theme-chalk/src/index.scss` 为基准，相对路径必然错位、
+ * 最终产出 `status: "error"` 的空 src。绝对路径不经 Vite 重写，由静态服务器直接命中。
+ */
+@font-face {
+  font-family: "PdfSimSun";
+  src: url("/tiger-code-fonts/SimSun.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "PdfSimSunExtB";
+  src: url("/tiger-code-fonts/SimSun-ExtB.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "PdfConsolas";
+  src: url("/tiger-code-fonts/Consolas.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "PdfTumanPUA";
+  src: url("/tiger-code-fonts/TumanPUA.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "PdfLXGWWenKai";
+  src: url("/tiger-code-fonts/LXGWWenKaiGBScreenR.ttf") format("truetype");
+  font-display: swap;
+}
+
+.tk-tiger-code {
+  // 默认变量组（solarized 亮色），后续 `.theme-*` 覆盖
+  --bg1: #fdf6e3;
+  --bg2: #eee8d5;
+  --ink: #586e75;
+  --muted: #839496;
+  --accent: #268bd2;
+  --accent-2: #2aa198;
+  --card: #f7f0e1;
+  --line: rgba(88, 110, 117, 0.2);
+  --good: #859900;
+  --bad: #dc322f;
+  --shadow: 0 20px 50px rgba(88, 110, 117, 0.18);
+  --glow-1: rgba(38, 139, 210, 0.12);
+  --glow-2: rgba(203, 75, 22, 0.1);
+  --card-glow-1: rgba(38, 139, 210, 0.14);
+  --card-glow-2: rgba(42, 161, 152, 0.12);
+  --ui-surface: rgba(253, 246, 227, 0.75);
+  --ui-surface-active: #fdf6e3;
+  --ui-border: rgba(88, 110, 117, 0.2);
+  --ui-text: #839496;
+  --ui-text-active: #586e75;
+  --ui-shadow: 0 6px 14px rgba(88, 110, 117, 0.18);
+  --ui-hover-border: rgba(38, 139, 210, 0.45);
+  --ui-hover-shadow: 0 6px 14px rgba(88, 110, 117, 0.16);
+  --btn-surface: #fdf6e3;
+  --box-surface: #fdf6e3;
+  --box-text: #586e75;
+  --root-min: 24px;
+  --root-vw: 3.5vw;
+  --root-max: 44px;
+  --box-size: 34px;
+  --box-font: 18px;
+  --box-size-mobile: 30px;
+  --box-font-mobile: 16px;
+}
+
+// ── 配色方案 ────────────────────────────────────────────────────
+.tk-tiger-code.theme-solarized.theme-dark {
+  --bg1: #002b36;
+  --bg2: #073642;
+  --ink: #eee8d5;
+  --muted: #93a1a1;
+  --accent: #268bd2;
+  --accent-2: #2aa198;
+  --card: #0b3944;
+  --line: rgba(238, 232, 213, 0.16);
+  --good: #859900;
+  --bad: #dc322f;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --glow-1: rgba(38, 139, 210, 0.18);
+  --glow-2: rgba(203, 75, 22, 0.16);
+  --card-glow-1: rgba(38, 139, 210, 0.2);
+  --card-glow-2: rgba(203, 75, 22, 0.18);
+  --ui-surface: rgba(7, 54, 66, 0.85);
+  --ui-surface-active: #0b3944;
+  --ui-border: rgba(147, 161, 161, 0.35);
+  --ui-text: #93a1a1;
+  --ui-text-active: #eee8d5;
+  --ui-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --ui-hover-border: rgba(147, 161, 161, 0.55);
+  --ui-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --btn-surface: #073642;
+  --box-surface: #586e75;
+  --box-text: #fdf6e3;
+}
+
+.tk-tiger-code.theme-nord {
+  --bg1: #eceff4;
+  --bg2: #e5e9f0;
+  --ink: #2e3440;
+  --muted: #4c566a;
+  --accent: #5e81ac;
+  --accent-2: #8fbcbb;
+  --card: #f1f3f7;
+  --line: rgba(46, 52, 64, 0.16);
+  --good: #a3be8c;
+  --bad: #bf616a;
+  --shadow: 0 20px 50px rgba(46, 52, 64, 0.18);
+  --glow-1: rgba(94, 129, 172, 0.16);
+  --glow-2: rgba(136, 192, 208, 0.12);
+  --card-glow-1: rgba(94, 129, 172, 0.16);
+  --card-glow-2: rgba(143, 188, 187, 0.12);
+  --ui-surface: rgba(236, 239, 244, 0.8);
+  --ui-surface-active: #eceff4;
+  --ui-border: rgba(46, 52, 64, 0.16);
+  --ui-text: #4c566a;
+  --ui-text-active: #2e3440;
+  --ui-shadow: 0 6px 14px rgba(46, 52, 64, 0.18);
+  --ui-hover-border: rgba(94, 129, 172, 0.45);
+  --ui-hover-shadow: 0 6px 14px rgba(46, 52, 64, 0.18);
+  --btn-surface: #eceff4;
+  --box-surface: #eceff4;
+  --box-text: #2e3440;
+}
+
+.tk-tiger-code.theme-nord.theme-dark {
+  --bg1: #2e3440;
+  --bg2: #3b4252;
+  --ink: #e5e9f0;
+  --muted: #d8dee9;
+  --accent: #88c0d0;
+  --accent-2: #8fbcbb;
+  --card: #434c5e;
+  --line: rgba(236, 239, 244, 0.14);
+  --good: #a3be8c;
+  --bad: #bf616a;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --glow-1: rgba(136, 192, 208, 0.18);
+  --glow-2: rgba(143, 188, 187, 0.16);
+  --card-glow-1: rgba(136, 192, 208, 0.2);
+  --card-glow-2: rgba(191, 97, 106, 0.16);
+  --ui-surface: rgba(67, 76, 94, 0.9);
+  --ui-surface-active: #4c566a;
+  --ui-border: rgba(236, 239, 244, 0.2);
+  --ui-text: #d8dee9;
+  --ui-text-active: #eceff4;
+  --ui-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --ui-hover-border: rgba(136, 192, 208, 0.55);
+  --ui-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --btn-surface: #4c566a;
+  --box-surface: #4c566a;
+  --box-text: #eceff4;
+}
+
+.tk-tiger-code.theme-catppuccin {
+  --bg1: #eff1f5;
+  --bg2: #e6e9ef;
+  --ink: #4c4f69;
+  --muted: #6c6f85;
+  --accent: #1e66f5;
+  --accent-2: #179299;
+  --card: #e6e9ef;
+  --line: rgba(76, 79, 105, 0.18);
+  --good: #40a02b;
+  --bad: #d20f39;
+  --shadow: 0 20px 50px rgba(76, 79, 105, 0.18);
+  --glow-1: rgba(30, 102, 245, 0.14);
+  --glow-2: rgba(220, 138, 120, 0.12);
+  --card-glow-1: rgba(30, 102, 245, 0.14);
+  --card-glow-2: rgba(23, 146, 153, 0.12);
+  --ui-surface: rgba(239, 241, 245, 0.8);
+  --ui-surface-active: #eff1f5;
+  --ui-border: rgba(76, 79, 105, 0.18);
+  --ui-text: #6c6f85;
+  --ui-text-active: #4c4f69;
+  --ui-shadow: 0 6px 14px rgba(76, 79, 105, 0.18);
+  --ui-hover-border: rgba(30, 102, 245, 0.45);
+  --ui-hover-shadow: 0 6px 14px rgba(76, 79, 105, 0.16);
+  --btn-surface: #eff1f5;
+  --box-surface: #eff1f5;
+  --box-text: #4c4f69;
+}
+
+.tk-tiger-code.theme-catppuccin.theme-dark {
+  --bg1: #1e1e2e;
+  --bg2: #181825;
+  --ink: #cdd6f4;
+  --muted: #a6adc8;
+  --accent: #89b4fa;
+  --accent-2: #94e2d5;
+  --card: #313244;
+  --line: rgba(205, 214, 244, 0.14);
+  --good: #a6e3a1;
+  --bad: #f38ba8;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --glow-1: rgba(137, 180, 250, 0.18);
+  --glow-2: rgba(250, 179, 135, 0.16);
+  --card-glow-1: rgba(137, 180, 250, 0.2);
+  --card-glow-2: rgba(148, 226, 213, 0.16);
+  --ui-surface: rgba(49, 50, 68, 0.9);
+  --ui-surface-active: #45475a;
+  --ui-border: rgba(205, 214, 244, 0.18);
+  --ui-text: #a6adc8;
+  --ui-text-active: #cdd6f4;
+  --ui-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --ui-hover-border: rgba(137, 180, 250, 0.55);
+  --ui-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --btn-surface: #45475a;
+  --box-surface: #45475a;
+  --box-text: #cdd6f4;
+}
+
+.tk-tiger-code.theme-gruvbox {
+  --bg1: #fbf1c7;
+  --bg2: #ebdbb2;
+  --ink: #3c3836;
+  --muted: #665c54;
+  --accent: #458588;
+  --accent-2: #689d6a;
+  --card: #f2e5bc;
+  --line: rgba(60, 56, 54, 0.2);
+  --good: #98971a;
+  --bad: #cc241d;
+  --shadow: 0 20px 50px rgba(60, 56, 54, 0.18);
+  --glow-1: rgba(69, 133, 136, 0.16);
+  --glow-2: rgba(214, 93, 14, 0.12);
+  --card-glow-1: rgba(69, 133, 136, 0.16);
+  --card-glow-2: rgba(104, 157, 106, 0.12);
+  --ui-surface: rgba(251, 241, 199, 0.78);
+  --ui-surface-active: #fbf1c7;
+  --ui-border: rgba(60, 56, 54, 0.2);
+  --ui-text: #665c54;
+  --ui-text-active: #3c3836;
+  --ui-shadow: 0 6px 14px rgba(60, 56, 54, 0.18);
+  --ui-hover-border: rgba(69, 133, 136, 0.45);
+  --ui-hover-shadow: 0 6px 14px rgba(60, 56, 54, 0.16);
+  --btn-surface: #fbf1c7;
+  --box-surface: #fbf1c7;
+  --box-text: #3c3836;
+}
+
+.tk-tiger-code.theme-gruvbox.theme-dark {
+  --bg1: #282828;
+  --bg2: #3c3836;
+  --ink: #ebdbb2;
+  --muted: #d5c4a1;
+  --accent: #83a598;
+  --accent-2: #8ec07c;
+  --card: #32302f;
+  --line: rgba(235, 219, 178, 0.14);
+  --good: #b8bb26;
+  --bad: #fb4934;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --glow-1: rgba(131, 165, 152, 0.18);
+  --glow-2: rgba(214, 93, 14, 0.16);
+  --card-glow-1: rgba(131, 165, 152, 0.2);
+  --card-glow-2: rgba(214, 93, 14, 0.18);
+  --ui-surface: rgba(50, 48, 47, 0.9);
+  --ui-surface-active: #3c3836;
+  --ui-border: rgba(235, 219, 178, 0.18);
+  --ui-text: #d5c4a1;
+  --ui-text-active: #ebdbb2;
+  --ui-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --ui-hover-border: rgba(131, 165, 152, 0.55);
+  --ui-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --btn-surface: #3c3836;
+  --box-surface: #3c3836;
+  --box-text: #ebdbb2;
+}
+
+.tk-tiger-code.theme-tokyonight {
+  --bg1: #e1e2e7;
+  --bg2: #c4c8da;
+  --ink: #3760bf;
+  --muted: #6172b0;
+  --accent: #2e7de9;
+  --accent-2: #1abc9c;
+  --card: #d6d7dc;
+  --line: rgba(55, 96, 191, 0.2);
+  --good: #587539;
+  --bad: #f52a65;
+  --shadow: 0 20px 50px rgba(55, 96, 191, 0.18);
+  --glow-1: rgba(46, 125, 231, 0.16);
+  --glow-2: rgba(245, 42, 101, 0.12);
+  --card-glow-1: rgba(46, 125, 231, 0.16);
+  --card-glow-2: rgba(26, 188, 156, 0.12);
+  --ui-surface: rgba(225, 226, 231, 0.78);
+  --ui-surface-active: #e1e2e7;
+  --ui-border: rgba(55, 96, 191, 0.2);
+  --ui-text: #6172b0;
+  --ui-text-active: #3760bf;
+  --ui-shadow: 0 6px 14px rgba(55, 96, 191, 0.18);
+  --ui-hover-border: rgba(46, 125, 231, 0.45);
+  --ui-hover-shadow: 0 6px 14px rgba(55, 96, 191, 0.16);
+  --btn-surface: #e1e2e7;
+  --box-surface: #e1e2e7;
+  --box-text: #3760bf;
+}
+
+.tk-tiger-code.theme-tokyonight.theme-dark {
+  --bg1: #1a1b26;
+  --bg2: #24283b;
+  --ink: #c0caf5;
+  --muted: #a9b1d6;
+  --accent: #7aa2f7;
+  --accent-2: #7dcfff;
+  --card: #2f334d;
+  --line: rgba(192, 202, 245, 0.14);
+  --good: #9ece6a;
+  --bad: #f7768e;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --glow-1: rgba(122, 162, 247, 0.18);
+  --glow-2: rgba(247, 118, 142, 0.14);
+  --card-glow-1: rgba(122, 162, 247, 0.2);
+  --card-glow-2: rgba(125, 207, 255, 0.16);
+  --ui-surface: rgba(47, 51, 77, 0.9);
+  --ui-surface-active: #3b4261;
+  --ui-border: rgba(192, 202, 245, 0.18);
+  --ui-text: #a9b1d6;
+  --ui-text-active: #c0caf5;
+  --ui-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --ui-hover-border: rgba(122, 162, 247, 0.55);
+  --ui-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --btn-surface: #3b4261;
+  --box-surface: #3b4261;
+  --box-text: #c0caf5;
+}
+
+.tk-tiger-code.theme-rosepine {
+  --bg1: #faf4ed;
+  --bg2: #f2e9e1;
+  --ink: #575279;
+  --muted: #6e6a86;
+  --accent: #286983;
+  --accent-2: #d7827e;
+  --card: #fffaf3;
+  --line: rgba(87, 82, 121, 0.18);
+  --good: #56949f;
+  --bad: #b4637a;
+  --shadow: 0 20px 50px rgba(87, 82, 121, 0.18);
+  --glow-1: rgba(40, 105, 131, 0.14);
+  --glow-2: rgba(215, 130, 126, 0.12);
+  --card-glow-1: rgba(40, 105, 131, 0.14);
+  --card-glow-2: rgba(215, 130, 126, 0.12);
+  --ui-surface: rgba(250, 244, 237, 0.8);
+  --ui-surface-active: #faf4ed;
+  --ui-border: rgba(87, 82, 121, 0.18);
+  --ui-text: #6e6a86;
+  --ui-text-active: #575279;
+  --ui-shadow: 0 6px 14px rgba(87, 82, 121, 0.18);
+  --ui-hover-border: rgba(40, 105, 131, 0.45);
+  --ui-hover-shadow: 0 6px 14px rgba(87, 82, 121, 0.16);
+  --btn-surface: #faf4ed;
+  --box-surface: #faf4ed;
+  --box-text: #575279;
+}
+
+.tk-tiger-code.theme-rosepine.theme-dark {
+  --bg1: #232136;
+  --bg2: #2a273f;
+  --ink: #e0def4;
+  --muted: #908caa;
+  --accent: #3e8fb0;
+  --accent-2: #ea9a97;
+  --card: #393552;
+  --line: rgba(224, 222, 244, 0.14);
+  --good: #9ccfd8;
+  --bad: #eb6f92;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --glow-1: rgba(62, 143, 176, 0.18);
+  --glow-2: rgba(235, 111, 146, 0.16);
+  --card-glow-1: rgba(62, 143, 176, 0.2);
+  --card-glow-2: rgba(234, 154, 151, 0.16);
+  --ui-surface: rgba(57, 53, 82, 0.9);
+  --ui-surface-active: #4a4566;
+  --ui-border: rgba(224, 222, 244, 0.18);
+  --ui-text: #908caa;
+  --ui-text-active: #e0def4;
+  --ui-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --ui-hover-border: rgba(62, 143, 176, 0.55);
+  --ui-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --btn-surface: #4a4566;
+  --box-surface: #4a4566;
+  --box-text: #e0def4;
+}
+
+.tk-tiger-code.theme-one {
+  --bg1: #fafafa;
+  --bg2: #f0f0f0;
+  --ink: #383a42;
+  --muted: #5c6370;
+  --accent: #4078f2;
+  --accent-2: #56b6c2;
+  --card: #ffffff;
+  --line: rgba(56, 58, 66, 0.18);
+  --good: #50a14f;
+  --bad: #e45649;
+  --shadow: 0 20px 50px rgba(56, 58, 66, 0.18);
+  --glow-1: rgba(64, 120, 242, 0.14);
+  --glow-2: rgba(228, 86, 73, 0.12);
+  --card-glow-1: rgba(64, 120, 242, 0.14);
+  --card-glow-2: rgba(86, 182, 194, 0.12);
+  --ui-surface: rgba(250, 250, 250, 0.8);
+  --ui-surface-active: #fafafa;
+  --ui-border: rgba(56, 58, 66, 0.18);
+  --ui-text: #5c6370;
+  --ui-text-active: #383a42;
+  --ui-shadow: 0 6px 14px rgba(56, 58, 66, 0.18);
+  --ui-hover-border: rgba(64, 120, 242, 0.45);
+  --ui-hover-shadow: 0 6px 14px rgba(56, 58, 66, 0.16);
+  --btn-surface: #fafafa;
+  --box-surface: #fafafa;
+  --box-text: #383a42;
+}
+
+.tk-tiger-code.theme-one.theme-dark {
+  --bg1: #282c34;
+  --bg2: #21252b;
+  --ink: #abb2bf;
+  --muted: #7f848e;
+  --accent: #61afef;
+  --accent-2: #56b6c2;
+  --card: #2c313c;
+  --line: rgba(171, 178, 191, 0.14);
+  --good: #98c379;
+  --bad: #e06c75;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --glow-1: rgba(97, 175, 239, 0.18);
+  --glow-2: rgba(224, 108, 117, 0.16);
+  --card-glow-1: rgba(97, 175, 239, 0.2);
+  --card-glow-2: rgba(86, 182, 194, 0.16);
+  --ui-surface: rgba(44, 49, 60, 0.9);
+  --ui-surface-active: #3a404c;
+  --ui-border: rgba(171, 178, 191, 0.18);
+  --ui-text: #7f848e;
+  --ui-text-active: #abb2bf;
+  --ui-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --ui-hover-border: rgba(97, 175, 239, 0.55);
+  --ui-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  --btn-surface: #3a404c;
+  --box-surface: #3a404c;
+  --box-text: #abb2bf;
+}
+
+// ── 页面容器（承接 legacy `body` 的职责） ──────────────────────
+.tk-tiger-code {
+  box-sizing: border-box;
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 800px at 10% -10%, var(--glow-1) 0%, transparent 60%),
+    radial-gradient(900px 900px at 110% 10%, var(--glow-2) 0%, transparent 60%),
+    linear-gradient(160deg, var(--bg1), var(--bg2));
+  min-height: 100vh;
+  font-family: "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", "Heiti SC", sans-serif;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  &.theme-dark {
+    color-scheme: dark;
+  }
+
+  &.cursor-hidden,
+  &.cursor-hidden * {
+    cursor: none !important;
+  }
+
+  .app {
+    width: min(980px, 95vw);
+    display: grid;
+    gap: 20px;
+    // legacy 用 `translateY(-48px) scale(1.15)` 补偿独立整页的视口高度，
+    // 嵌进 VitePress 后这段变换只会放大盒子并让上方留白失衡，故不再使用。
+  }
+
+  header {
+    display: grid;
+    gap: 6px;
+  }
+
+  .title {
+    font-family: "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", "Heiti SC", "Noto Sans CJK SC", sans-serif;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    font-synthesis: none;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .top-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    color: var(--muted);
+    font-size: 18px;
+  }
+
+  .side-controls {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease;
+  }
+
+  // 学习模式不显示准确率
+  &.learning-mode .stat-accuracy {
+    display: none;
+  }
+
+  .stat-wrong {
+    display: none;
+  }
+
+  &.practice-wrong .stat-wrong {
+    display: flex;
+  }
+
+  &.practice-wrong .stat-accuracy,
+  &.practice-wrong .stat-progress,
+  &.practice-wrong .stat-crown {
+    display: none;
+  }
+
+  .stat-crown {
+    margin-top: 2px;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--accent);
+    flex-basis: 100%;
+
+    &.is-empty {
+      display: none;
+    }
+  }
+
+  .stat-timer {
+    flex-basis: 100%;
+    margin-top: 2px;
+  }
+
+  .stat strong {
+    color: var(--ink);
+  }
+
+  .controls {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  .mode-switch {
+    display: inline-flex;
+    gap: 4px;
+    padding: 3px;
+    border-radius: 999px;
+    border: 1px solid var(--ui-border);
+    background: var(--ui-surface);
+  }
+
+  .mode-btn {
+    border: none;
+    background: transparent;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--ui-text);
+    cursor: pointer;
+    transition:
+      color 120ms ease,
+      background-color 120ms ease,
+      box-shadow 120ms ease;
+
+    &.is-active {
+      color: var(--ui-text-active);
+      background: var(--ui-surface-active);
+      box-shadow: var(--ui-shadow);
+    }
+  }
+
+  .size-controls {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .size-btn {
+    border: 1px solid var(--ui-border);
+    background: var(--btn-surface);
+    border-radius: 10px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--ui-text-active);
+    cursor: pointer;
+    transition:
+      border-color 120ms ease,
+      transform 120ms ease,
+      box-shadow 120ms ease;
+
+    &:hover {
+      border-color: var(--ui-hover-border);
+      box-shadow: var(--ui-hover-shadow);
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+  }
+
+  .palette-select select {
+    border: 1px solid var(--ui-border);
+    background: var(--btn-surface);
+    border-radius: 10px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--ui-text-active);
+    cursor: pointer;
+  }
+
+  // ── 卡片 ──────────────────────────────────────────────────────
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    animation: tk-tiger-code-float-in 600ms ease-out;
+    text-align: center;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      background: conic-gradient(from 140deg, var(--card-glow-1), var(--card-glow-2), var(--card-glow-1));
+      border-radius: 50%;
+      top: -120px;
+      right: -120px;
+      filter: blur(2px);
+      z-index: 0;
+    }
+  }
+
+  .card-meta {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--muted);
+    z-index: 2;
+    text-align: left;
+    pointer-events: none;
+    margin-bottom: 20px;
+
+    .stat {
+      font-size: 12px;
+      min-height: auto;
+    }
+  }
+
+  .wrong-actions {
+    display: none;
+    gap: 4px;
+    pointer-events: auto;
+  }
+
+  &.practice-wrong .wrong-actions {
+    display: flex;
+  }
+
+  .wrong-action-btn {
+    border: 1px solid var(--ui-border);
+    background: var(--btn-surface);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 11px;
+    color: var(--ui-text);
+    cursor: pointer;
+    transition:
+      background-color 120ms ease,
+      box-shadow 120ms ease;
+
+    &:hover {
+      background: var(--ui-surface-active);
+      box-shadow: var(--ui-shadow);
+    }
+
+    &--danger {
+      border-color: #dc322f;
+      color: #dc322f;
+
+      &:hover {
+        background: #dc322f;
+        color: #fff;
+      }
+    }
+  }
+
+  // 字根字体栈。三个 PDF 字体覆盖绝大多数字形（含 118/118 个 PUA 码位），
+  // 但实测数据集里有5 个生僻字（U+223A8 / U+20094 / U+24D13 / U+29D4B / U+21B54，CJK 扩展 B/C）
+  // 以及全角括号 `（` `）` 并不在这三个字体里，落到最后的通用 `serif`。
+  // 各系统 `serif` 对扩展区汉字的覆盖并不一致：缺字时会显示成豆腐块。
+  // 因此显式补上常见中文字体作为兜底，保证换机器/换系统也稳定显示。
+  .root-char {
+    z-index: 1;
+    display: block;
+    font-family:
+      "PdfTumanPUA", "PdfSimSunExtB", "PdfSimSun", "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei",
+      "PingFang SC", "SimSun-ExtB", "Microsoft JhengHei", serif;
+    font-size: clamp(var(--root-min), var(--root-vw), var(--root-max));
+    line-height: 1;
+    padding: 0;
+  }
+
+  .input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 2px;
+    cursor: default;
+    z-index: 1;
+
+    &.is-error .code-box {
+      border-color: var(--bad);
+      color: var(--bad);
+      background: rgba(182, 69, 43, 0.06);
+      box-shadow: inset 0 0 0 1px rgba(182, 69, 43, 0.2);
+    }
+  }
+
+  .code-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    opacity: 0;
+    caret-color: transparent;
+    color: transparent;
+    cursor: default;
+    /* 16px 防止 iOS Safari 聚焦时自动放大页面 */
+    font-size: 16px;
+  }
+
+  .code-boxes {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .code-box {
+    width: var(--box-size);
+    height: var(--box-size);
+    border-radius: 8px;
+    border: 1px solid var(--ui-border);
+    background: var(--box-surface);
+    display: grid;
+    place-items: center;
+    font-family: "PdfConsolas", "Consolas", "SFMono-Regular", "Menlo", monospace;
+    font-size: var(--box-font);
+    font-weight: 600;
+    text-transform: lowercase;
+    color: var(--box-text);
+    box-shadow: inset 0 0 0 1px rgba(31, 42, 36, 0.02);
+  }
+
+  .reveal {
+    min-height: 1em;
+    font-family: "PdfConsolas", "Consolas", "SFMono-Regular", "Menlo", monospace;
+    font-size: 22px;
+    letter-spacing: 0.18em;
+    color: var(--bad);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition:
+      opacity 140ms ease,
+      transform 140ms ease;
+    z-index: 1;
+    line-height: 1;
+
+    &.is-show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .shake {
+    animation: tk-tiger-code-shake 260ms ease-in-out;
+  }
+
+  // ── 页脚 ──────────────────────────────────────────────────────
+  .footer {
+    color: var(--muted);
+    font-size: 12px;
+    display: grid;
+    gap: 8px;
+    z-index: 1;
+  }
+
+  .footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  // legacy 用 `1fr auto 1fr` 三栏网格，实测嵌进主题后两侧 `1fr` 会吃掉固定宽度、
+  // 把中间的备案信息压到 178px 宽从而折成四行，这里改为单一居中列 + flex 换行。
+  // 版权/GitHub/ICP/公安备案四条统一放中间纵向排列，逐行独立不折行。
+  .footer-row--legal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px 10px;
+    width: 100%;
+  }
+
+  .footer-center {
+    // 一行一个：每条备案信息独占一行，纵向排列。
+    // 同时锁定 intrinsic 宽度并禁止横向折行，避免被右侧 `margin-left:auto` 压成窄条乱折。
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  .footer-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    // 用 flex 做图标与文本的垂直居中，比 `vertical-align` 在混排时稳定得多
+    display: inline-flex;
+    align-items: center;
+    transition:
+      color 120ms ease,
+      border-color 120ms ease;
+
+    &:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    img.footer-icon {
+      border: none;
+      border-bottom: none !important;
+    }
+  }
+
+  .footer-icon {
+    flex: 0 0 auto;
+    margin-right: 3px;
+  }
+
+  // ── 云同步条 ──────────────────────────────────────────────────
+  .sync-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // 未配置时状态文案会点名缺失的环境变量，可能很长，允许换行避免撑破布局
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .sync-status {
+    letter-spacing: 0.03em;
+    // 环境变量名含下划线与点，需允许在任意位置断行
+    overflow-wrap: anywhere;
+
+    &.is-syncing {
+      opacity: 0.6;
+    }
+
+    &.is-error {
+      color: #dc322f;
+    }
+  }
+
+  .sync-btn {
+    border: 1px solid var(--ui-border);
+    background: var(--btn-surface);
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--ui-text);
+    cursor: pointer;
+    transition:
+      background-color 120ms ease,
+      box-shadow 120ms ease;
+
+    &:hover {
+      background: var(--ui-surface-active);
+      box-shadow: var(--ui-shadow);
+    }
+  }
+
+  .sync-id-input {
+    border: 1px solid var(--ui-border);
+    background: var(--btn-surface);
+    border-radius: 8px;
+    padding: 3px 8px;
+    font-size: 11px;
+    color: var(--ui-text);
+    width: 230px;
+    font-family: monospace;
+  }
+
+  .sync-id-display {
+    font-family: monospace;
+    font-size: 11px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 120ms ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  // ── 半隐 / 全隐 ───────────────────────────────────────────────
+  &.ui-half .footer,
+  &.ui-full .footer,
+  &.ui-half .sync-bar,
+  &.ui-full .sync-bar {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  &.ui-half header .title,
+  &.ui-full header .title,
+  &.ui-half header .controls,
+  &.ui-full header .controls {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  &.ui-half .side-controls,
+  &.ui-full .side-controls {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+  }
+
+  &.ui-half .top-meta:hover .side-controls,
+  &.ui-full .top-meta:hover .side-controls {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  &.ui-full .card-meta {
+    display: none;
+  }
+
+  &.ui-full .card {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+
+    &::before {
+      content: none;
+    }
+  }
+}
+
+// ── 动画 ────────────────────────────────────────────────────────
+@keyframes tk-tiger-code-float-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tk-tiger-code-shake {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+// ── 响应式 ──────────────────────────────────────────────────────
+@media (max-width: 600px) {
+  .tk-tiger-code {
+    /* 用动态视口高度适配移动端浏览器地址栏收缩，顶部对齐避免缩放后溢出 */
+    min-height: 100vh;
+    min-height: 100dvh;
+    place-items: start center;
+    padding: 16px 12px;
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+
+    .app {
+      width: 100%;
+      /* 移动端取消桌面端的放大与上移，避免横向溢出 */
+      transform: none;
+      gap: 16px;
+    }
+
+    .title {
+      font-size: clamp(24px, 10vw, 32px);
+      text-align: left;
+    }
+
+    .top-meta {
+      gap: 10px;
+    }
+
+    .side-controls {
+      gap: 8px;
+    }
+
+    .controls {
+      margin-left: 0;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    /* 移动端加大点按目标，方便手指操作 */
+    .mode-btn {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .size-btn {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .palette-select select {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .code-box {
+      width: var(--box-size-mobile);
+      height: var(--box-size-mobile);
+      font-size: var(--box-font-mobile);
+    }
+
+    .footer-row--legal {
+      justify-content: center;
+    }
+
+    .footer-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      // 窄屏放开nowrap，否则单行宽度会溢出视口
+      white-space: normal;
+    }
+
+    .footer-icon {
+      width: 12px;
+      height: 12px;
+    }
+  }
+}
+
+/* 触屏设备没有 hover：半隐/全隐模式下控制栏改为常驻可见，避免无法呼出 */
+@media (hover: none) {
+  .tk-tiger-code.ui-half .side-controls,
+  .tk-tiger-code.ui-full .side-controls {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+}
