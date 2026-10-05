@@ -859,13 +859,17 @@
   }
 
   .footer-center {
-    // 一行一个：每条备案信息独占一行，纵向排列。
-    // 同时锁定 intrinsic 宽度并禁止横向折行，避免被右侧 `margin-left:auto` 压成窄条乱折。
+    // PC 端三项横排一行。`flex: 0 0 auto` 锁定 intrinsic 宽度：容器按 max-content 撑开，
+    // 不会被父级 flex 压成窄条而折行（legacy 的三栏 `1fr auto 1fr` 正是这么把备案信息
+    // 挤到 178px 而折成四行的）。真放不下时先换行并保持居中，`max-width: 600px`
+    // 的窄屏分支再整体回落为纵向三行。
     display: flex;
     flex: 0 0 auto;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    gap: 4px 10px;
     white-space: nowrap;
   }
 

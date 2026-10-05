@@ -228,14 +228,6 @@ const onIdKeydown = (event: KeyboardEvent) => {
         <div class="footer-row footer-row--legal">
           <span class="footer-center">
             <span>© 2026 虎码字根练习</span>
-            <a
-              class="footer-link"
-              href="https://github.com/tb659/tiger-code-exercise"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-            </a>
             <a class="footer-link" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
               <img class="footer-icon" :src="icpRecordImg" alt="ICP备案" width="14" height="14" />
               <span>皖ICP备2023005643号</span>
