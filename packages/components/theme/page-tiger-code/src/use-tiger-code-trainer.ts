@@ -16,26 +16,37 @@ import {
   TIMER_TICK_MS,
   buildRootClassList,
 } from "./constants";
-import { buildOrderWithCompleted, createRootViews, mapCompletedToMerged, mapCompletedToVariants } from "./root-mapping";
-import type {
-  TigerCodeSnapshot,
-  TigerPracticeMode,
-  TigerPracticeStats,
-  TigerRootMode,
-  TigerReviewStage,
-  TigerUiMode,
-  TigerSchemeMode,
-  TigerPaletteMode,
+import { buildOrderWithCompleted, createRootViews, mapCompletedToMerged } from "./root-mapping";
+import {
+  TIGER_PRACTICE_MODES,
+  TIGER_ROOT_MODES,
+  TIGER_TYPE_KEYS,
+  tigerTypeKey,
+  type TigerCodeSnapshot,
+  type TigerPracticeMode,
+  type TigerRootMode,
+  type TigerReviewStage,
+  type TigerTypeBuckets,
+  type TigerUiMode,
+  type TigerSchemeMode,
+  type TigerPaletteMode,
 } from "./types";
 
-/** 三个练习模式共享的统计容器 */
-const createStatsMap = (): Record<TigerPracticeMode, TigerPracticeStats> => ({
-  learning: { total: 0, correct: 0 },
-  normal: { total: 0, correct: 0 },
-  review: { total: 0, correct: 0 },
-  follow: { total: 0, correct: 0 },
-  wrong: { total: 0, correct: 0 },
-});
+/** 10 种类型组合的状态桶 */
+const createBuckets = (): TigerTypeBuckets =>
+  Object.fromEntries(
+    TIGER_TYPE_KEYS.map(key => [
+      key,
+      {
+        completed: new Set<number>(),
+        total: 0,
+        correct: 0,
+        wrong: new Set<number>(),
+        wrongProgress: new Set<number>(),
+        rounds: 0,
+      },
+    ])
+  ) as TigerTypeBuckets;
 
 /** Fisher-Yates 洗牌 */
 const shuffle = <T>(array: T[]): T[] => {
@@ -99,14 +110,24 @@ export const useTigerCodeTrainer = (refs: {
   const currentIsReview = ref(false);
   const locked = ref(false);
   const buffer = ref("");
-  const reviewQueue = ref<{ idx: number; dueAt: number }[]>([]);
-  const reviewState = ref(new Map<number, TigerReviewStage>());
-  const completedSet = ref(new Set<number>());
-  const wrongByMode = ref({ all: new Set<number>(), merged: new Set<number>() });
-  const wrongProgressByMode = ref({ all: new Set<number>(), merged: new Set<number>() });
-  const roundsByMode = ref({ all: 0, merged: 0 });
+  /**
+   * 10 种类型组合各自独立的进度 / 统计 / 错题 / 皇冠。
+   * 键为 `${字根模式}:${练习模式}`，切换任意一种组合都不影响其余九种。
+   */
+  const buckets = ref<TigerTypeBuckets>(createBuckets());
+  /**
+   * 复习阶段与队列按字根模式分桶。
+   *
+   * 根下标只在所属字根模式的数据集内有意义，跨字根模式共享会串号；而同一字根模式下的
+   * 5 种练习模式必须共享一份队列，否则在其他模式答对的题永远不会进入「复习」队列。
+   */
+  const reviewStateByMode = ref<Record<TigerRootMode, Map<number, TigerReviewStage>>>({
+    all: new Map<number, TigerReviewStage>(),
+    merged: new Map<number, TigerReviewStage>(),
+  });
+  const reviewQueueByMode = ref<Record<TigerRootMode, { idx: number; dueAt: number }[]>>({ all: [], merged: [] });
+  /** 学习模式已见根，按字根模式分桶（仅学习模式读取） */
   const learningSeenByMode = ref({ all: new Set<number>(), merged: new Set<number>() });
-  const statsByMode = ref(createStatsMap());
   const turn = ref(0);
 
   // ── 渲染状态 ──────────────────────────────────────────────────
@@ -132,13 +153,16 @@ export const useTigerCodeTrainer = (refs: {
   let persistHandler: (() => void) | null = null;
 
   const activeRoots = computed(() => (mode.value === "merged" ? views.merged : views.all));
-  const wrongSet = computed(() => (mode.value === "merged" ? wrongByMode.value.merged : wrongByMode.value.all));
-  const wrongProgressSet = computed(() =>
-    mode.value === "merged" ? wrongProgressByMode.value.merged : wrongProgressByMode.value.all
-  );
+  /** 当前「字根模式 × 练习模式」组合的状态桶 */
+  const bucket = computed(() => buckets.value[tigerTypeKey(mode.value, practiceMode.value)]);
+  const completedSet = computed(() => bucket.value.completed);
+  const wrongSet = computed(() => bucket.value.wrong);
+  const wrongProgressSet = computed(() => bucket.value.wrongProgress);
   const learningSeenSet = computed(() =>
     mode.value === "merged" ? learningSeenByMode.value.merged : learningSeenByMode.value.all
   );
+  const reviewState = computed(() => reviewStateByMode.value[mode.value]);
+  const reviewQueue = computed(() => reviewQueueByMode.value[mode.value]);
 
   const currentItem = computed(() => activeRoots.value[currentItemIndex.value] ?? { root: "—", code: "" });
   const isWrongEmpty = computed(() => practiceMode.value === "wrong" && wrongSet.value.size === 0);
@@ -201,19 +225,19 @@ export const useTigerCodeTrainer = (refs: {
 
   // ── 遗忘曲线 ──────────────────────────────────────────────────
   const removeFromReviewQueue = (idx: number) => {
-    reviewQueue.value = reviewQueue.value.filter(entry => entry.idx !== idx);
+    reviewQueueByMode.value[mode.value] = reviewQueueByMode.value[mode.value].filter(entry => entry.idx !== idx);
   };
 
   const clearReviewState = () => {
-    reviewQueue.value = [];
-    reviewState.value.clear();
+    reviewQueueByMode.value[mode.value] = [];
+    reviewStateByMode.value[mode.value].clear();
   };
 
   const scheduleReview = (idx: number, stepIndex: number) => {
     const step = REVIEW_STEPS[stepIndex];
     if (step === undefined) return;
     removeFromReviewQueue(idx);
-    reviewQueue.value = [...reviewQueue.value, { idx, dueAt: turn.value + step }];
+    reviewQueueByMode.value[mode.value] = [...reviewQueueByMode.value[mode.value], { idx, dueAt: turn.value + step }];
   };
 
   /** 取出一个已到期（`dueAt <= turn`）且到期时间最早的复习项 */
@@ -263,11 +287,10 @@ export const useTigerCodeTrainer = (refs: {
   const progressText = computed(() => `${completedCount.value}/${totalCount.value}`);
   const wrongTotal = computed(() => wrongSet.value.size);
   const wrongProgressText = computed(() => `${wrongDone.value}/${wrongTotal.value}`);
-  const crowns = computed(() => (mode.value === "merged" ? roundsByMode.value.merged : roundsByMode.value.all));
+  const crowns = computed(() => bucket.value.rounds);
   const crownText = computed(() => (crowns.value <= 0 ? "" : crowns.value === 1 ? "👑" : `👑×${crowns.value}`));
-  const currentStats = computed(() => statsByMode.value[practiceMode.value]);
   const accuracyText = computed(() =>
-    currentStats.value.total ? `${Math.round((currentStats.value.correct / currentStats.value.total) * 100)}%` : "0%"
+    bucket.value.total ? `${Math.round((bucket.value.correct / bucket.value.total) * 100)}%` : "0%"
   );
 
   /**
@@ -302,10 +325,7 @@ export const useTigerCodeTrainer = (refs: {
 
   /** 完成一整轮：非错题模式下皇冠 +1，并重设 auto 配色基准 */
   const handleProgressReset = () => {
-    if (practiceMode.value !== "wrong") {
-      if (mode.value === "merged") roundsByMode.value.merged += 1;
-      else roundsByMode.value.all += 1;
-    }
+    if (practiceMode.value !== "wrong") bucket.value.rounds += 1;
     if (paletteMode.value !== "auto") return;
     const active = PALETTE_OPTIONS.indexOf(activePalette.value as (typeof PALETTE_OPTIONS)[number]);
     autoPaletteBaseIndex.value = active >= 0 ? active : 0;
@@ -444,7 +464,7 @@ export const useTigerCodeTrainer = (refs: {
   const triggerWrong = () => {
     if (locked.value) return;
     locked.value = true;
-    currentStats.value.total += 1;
+    bucket.value.total += 1;
     markWrong(currentItemIndex.value);
     applyWrong();
   };
@@ -495,10 +515,10 @@ export const useTigerCodeTrainer = (refs: {
     if (code.length < 2) return;
 
     locked.value = true;
-    currentStats.value.total += 1;
+    bucket.value.total += 1;
 
     if (code === currentItem.value.code) {
-      currentStats.value.correct += 1;
+      bucket.value.correct += 1;
       markCorrect(currentItemIndex.value);
       isError.value = false;
       if (practiceMode.value !== "follow") hideReveal();
@@ -525,35 +545,36 @@ export const useTigerCodeTrainer = (refs: {
   };
 
   // ── 设置切换 ──────────────────────────────────────────────────
+  /**
+   * 切换字根模式。
+   *
+   * 每种「字根模式 × 练习模式」组合各有独立进度桶，因此这里不再做任何映射，
+   * 切过去直接就是另一种类型自己的进度；原先 `all ⇄ merged` 的来回映射会不可逆地
+   * 放大进度（变体 5 个 → 归并 3 组 → 展开回 12 个变体）。
+   */
   const setRootMode = (next: TigerRootMode) => {
     if (next === mode.value) return;
-    const completed = Array.from(completedSet.value);
-    const targetCompleted =
-      mode.value === "all" && next === "merged"
-        ? mapCompletedToMerged(completed, mapping)
-        : mode.value === "merged" && next === "all"
-          ? mapCompletedToVariants(completed, mapping)
-          : new Set<number>();
-
     mode.value = next;
-    completedSet.value.clear();
-    targetCompleted.forEach(idx => completedSet.value.add(idx));
-    clearReviewState();
 
-    const rebuilt = buildOrderWithCompleted(activeRoots.value.length, targetCompleted, shuffle);
+    const completed = completedSet.value;
+    const rebuilt = buildOrderWithCompleted(activeRoots.value.length, completed, shuffle);
     order.value = rebuilt.order;
     currentIndex.value = rebuilt.resumeAt;
 
+    locked.value = false;
     renderQuestion();
     recomputeWrongProgress();
     persist();
   };
 
+  /**
+   * 切换练习模式。
+   *
+   * 与字根模式同理，切换后读到的是该类型自己的进度 / 统计 / 错题 / 皇冠。
+   */
   const setPracticeMode = (next: TigerPracticeMode) => {
     if (next === practiceMode.value) return;
-    const wasReviewEnabled = reviewEnabled.value;
     practiceMode.value = next;
-    if (reviewEnabled.value !== wasReviewEnabled && !reviewEnabled.value) clearReviewState();
 
     locked.value = false;
     if (practiceMode.value === "wrong") renderQuestion();
@@ -618,11 +639,12 @@ export const useTigerCodeTrainer = (refs: {
     persist();
   };
 
+  /** 清空全部 10 种类型的错题与错题进度 */
   const clearAllWrong = () => {
-    wrongByMode.value.all.clear();
-    wrongByMode.value.merged.clear();
-    wrongProgressByMode.value.all.clear();
-    wrongProgressByMode.value.merged.clear();
+    for (const key of TIGER_TYPE_KEYS) {
+      buckets.value[key].wrong.clear();
+      buckets.value[key].wrongProgress.clear();
+    }
     if (practiceMode.value === "wrong") renderQuestion();
     recomputeWrongProgress();
     persist();
@@ -640,75 +662,151 @@ export const useTigerCodeTrainer = (refs: {
   );
 
   // ── 序列化 ────────────────────────────────────────────────────
-  const serialize = (): TigerCodeSnapshot => ({
-    cs: [...completedSet.value],
-    wb: { a: [...wrongByMode.value.all], m: [...wrongByMode.value.merged] },
-    wp: { a: [...wrongProgressByMode.value.all], m: [...wrongProgressByMode.value.merged] },
-    rs: Object.fromEntries(reviewState.value) as Record<string, TigerReviewStage>,
-    rq: reviewQueue.value.map(entry => ({ ...entry })),
-    t: turn.value,
-    st: Object.fromEntries(Object.entries(statsByMode.value).map(([k, v]) => [k, [v.total, v.correct]])),
-    rm: { a: roundsByMode.value.all, m: roundsByMode.value.merged },
-    ls: { a: [...learningSeenByMode.value.all], m: [...learningSeenByMode.value.merged] },
-    md: mode.value,
-    pm: practiceMode.value,
-    si: sizeIndex.value,
-    sm: schemeMode.value,
-    pl: paletteMode.value,
-    ap: autoPaletteBaseIndex.value,
-    ts: Date.now(),
-  });
-
-  const restore = (d: TigerCodeSnapshot) => {
-    completedSet.value.clear();
-    (d.cs ?? []).forEach(i => completedSet.value.add(i));
-
-    wrongByMode.value.all.clear();
-    wrongByMode.value.merged.clear();
-    (d.wb?.a ?? []).forEach(i => wrongByMode.value.all.add(i));
-    (d.wb?.m ?? []).forEach(i => wrongByMode.value.merged.add(i));
-
-    wrongProgressByMode.value.all.clear();
-    wrongProgressByMode.value.merged.clear();
-    (d.wp?.a ?? []).forEach(i => wrongProgressByMode.value.all.add(i));
-    (d.wp?.m ?? []).forEach(i => wrongProgressByMode.value.merged.add(i));
-
-    reviewState.value.clear();
-    Object.entries(d.rs ?? {}).forEach(([k, v]) => reviewState.value.set(Number(k), { stage: v.stage }));
-
-    reviewQueue.value = (d.rq ?? []).map(entry => ({ ...entry }));
-    turn.value = d.t ?? 0;
-
-    if (d.st) {
-      Object.entries(d.st).forEach(([k, v]) => {
-        const target = statsByMode.value[k as TigerPracticeMode];
-        if (target) {
-          target.total = v[0] ?? 0;
-          target.correct = v[1] ?? 0;
-        }
-      });
-    } else {
-      // 兼容 legacy 早期快照格式：统计只有全局 to / c 两个字段
-      statsByMode.value.normal.total = d.to ?? 0;
-      statsByMode.value.normal.correct = d.c ?? 0;
+  /**
+   * 输出 v2 快照：10 种类型的进度全部写进 `b`，顶层只保留跨类型共享的字段。
+   *
+   * 不再写出 legacy 的 `cs` / `st` / `wb` / `wp` / `rm`，避免同一份数据出现两套表达
+   * 方式而产生歧义；旧快照由 `restore()` 的迁移分支负责读取。
+   */
+  const serialize = (): TigerCodeSnapshot => {
+    const cs: Record<string, number[]> = {};
+    const st: Record<string, [number, number]> = {};
+    const wb: Record<string, number[]> = {};
+    const wp: Record<string, number[]> = {};
+    const rm: Record<string, number> = {};
+    for (const key of TIGER_TYPE_KEYS) {
+      const b = buckets.value[key];
+      cs[key] = [...b.completed];
+      st[key] = [b.total, b.correct];
+      wb[key] = [...b.wrong];
+      wp[key] = [...b.wrongProgress];
+      rm[key] = b.rounds;
     }
 
-    roundsByMode.value.all = d.rm?.a ?? 0;
-    roundsByMode.value.merged = d.rm?.m ?? 0;
+    return {
+      b: {
+        cs,
+        st,
+        wb,
+        wp,
+        rm,
+        rs: {
+          a: Object.fromEntries(reviewStateByMode.value.all) as Record<string, TigerReviewStage>,
+          m: Object.fromEntries(reviewStateByMode.value.merged) as Record<string, TigerReviewStage>,
+        },
+        rq: {
+          a: reviewQueueByMode.value.all.map(entry => ({ ...entry })),
+          m: reviewQueueByMode.value.merged.map(entry => ({ ...entry })),
+        },
+      },
+      t: turn.value,
+      ls: { a: [...learningSeenByMode.value.all], m: [...learningSeenByMode.value.merged] },
+      md: mode.value,
+      pm: practiceMode.value,
+      si: sizeIndex.value,
+      sm: schemeMode.value,
+      pl: paletteMode.value,
+      ap: autoPaletteBaseIndex.value,
+      ts: Date.now(),
+    };
+  };
+
+  /** 清空全部 10 种类型的桶 */
+  const resetBuckets = () => {
+    for (const key of TIGER_TYPE_KEYS) {
+      const b = buckets.value[key];
+      b.completed.clear();
+      b.wrong.clear();
+      b.wrongProgress.clear();
+      b.total = 0;
+      b.correct = 0;
+      b.rounds = 0;
+    }
+  };
+
+  /**
+   * legacy v1 → v2 迁移：把共享字段展开进 10 个桶。
+   *
+   * 旧快照里 `cs` / `st` 是不分类型的单份数据，只能按原项目「切换字根模式时做映射」的
+   * 规则展开：全字根桶直接沿用 `cs`，归并字根桶沿用 `mapCompletedToMerged(cs)`，
+   * 这样用户在归并字根下看到的进度与旧版本一致，不丢原有练习成果。
+   */
+  const migrateLegacy = (d: TigerCodeSnapshot) => {
+    const legacyCompleted = d.cs ?? [];
+    const mergedCompleted = mapCompletedToMerged(legacyCompleted, mapping);
+
+    for (const rootMode of TIGER_ROOT_MODES) {
+      const isMerged = rootMode === "merged";
+      for (const practiceMode of TIGER_PRACTICE_MODES) {
+        const b = buckets.value[tigerTypeKey(rootMode, practiceMode)];
+        (isMerged ? mergedCompleted : legacyCompleted).forEach(i => b.completed.add(i));
+        (isMerged ? (d.wb?.m ?? []) : (d.wb?.a ?? [])).forEach(i => b.wrong.add(i));
+        (isMerged ? (d.wp?.m ?? []) : (d.wp?.a ?? [])).forEach(i => b.wrongProgress.add(i));
+        b.rounds = (isMerged ? d.rm?.m : d.rm?.a) ?? 0;
+
+        const stats = d.st?.[practiceMode];
+        if (stats) {
+          b.total = stats[0] ?? 0;
+          b.correct = stats[1] ?? 0;
+        } else if (practiceMode === "normal") {
+          // legacy 更早期快照：统计只有全局 to / c 两个字段
+          b.total = d.to ?? 0;
+          b.correct = d.c ?? 0;
+        }
+      }
+    }
+
+    // legacy 的复习状态只有一份，其根下标属于保存时所处的字根模式
+    const rootMode = d.md ?? "all";
+    reviewStateByMode.value.all.clear();
+    reviewStateByMode.value.merged.clear();
+    reviewQueueByMode.value.all = [];
+    reviewQueueByMode.value.merged = [];
+    Object.entries(d.rs ?? {}).forEach(([k, v]) => {
+      reviewStateByMode.value[rootMode].set(Number(k), { stage: v.stage });
+    });
+    reviewQueueByMode.value[rootMode] = (d.rq ?? []).map(entry => ({ ...entry }));
+  };
+
+  const restore = (d: TigerCodeSnapshot) => {
+    resetBuckets();
+
+    // 先落定当前模式，后续派生状态（当前桶、激活数据集）都依赖它
+    if (d.md) mode.value = d.md;
+    if (d.pm) practiceMode.value = d.pm;
+
+    if (d.b) {
+      for (const key of TIGER_TYPE_KEYS) {
+        const b = buckets.value[key];
+        (d.b.cs?.[key] ?? []).forEach(i => b.completed.add(i));
+        (d.b.wb?.[key] ?? []).forEach(i => b.wrong.add(i));
+        (d.b.wp?.[key] ?? []).forEach(i => b.wrongProgress.add(i));
+        const stats = d.b.st?.[key];
+        if (stats) {
+          b.total = stats[0] ?? 0;
+          b.correct = stats[1] ?? 0;
+        }
+        b.rounds = d.b.rm?.[key] ?? 0;
+      }
+      reviewStateByMode.value.all = new Map(
+        Object.entries(d.b.rs?.a ?? {}).map(([k, v]) => [Number(k), { stage: v.stage }])
+      );
+      reviewStateByMode.value.merged = new Map(
+        Object.entries(d.b.rs?.m ?? {}).map(([k, v]) => [Number(k), { stage: v.stage }])
+      );
+      reviewQueueByMode.value.all = (d.b.rq?.a ?? []).map(entry => ({ ...entry }));
+      reviewQueueByMode.value.merged = (d.b.rq?.m ?? []).map(entry => ({ ...entry }));
+    } else {
+      migrateLegacy(d);
+    }
+
+    turn.value = d.t ?? 0;
 
     learningSeenByMode.value.all.clear();
     learningSeenByMode.value.merged.clear();
     (d.ls?.a ?? []).forEach(i => learningSeenByMode.value.all.add(i));
     (d.ls?.m ?? []).forEach(i => learningSeenByMode.value.merged.add(i));
 
-    if (d.md) mode.value = d.md;
-    if (d.pm) {
-      // 与 legacy `syncPracticeState()` 保持一致：恢复到关闭复习的练习模式时清空复习状态。
-      // 这里不能走 `setPracticeMode()`，因为它会额外触发重渲染与 persist()，而恢复流程需要自己控制顺序。
-      const wasReviewEnabled = reviewEnabled.value;
-      practiceMode.value = d.pm;
-      if (reviewEnabled.value !== wasReviewEnabled && !reviewEnabled.value) clearReviewState();
-    }
     if (d.si != null) sizeIndex.value = d.si;
     if (d.sm) schemeMode.value = d.sm;
     if (d.pl) paletteMode.value = d.pl;
