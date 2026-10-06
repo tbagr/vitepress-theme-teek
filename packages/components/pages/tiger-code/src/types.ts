@@ -65,7 +65,12 @@ export const TIGER_TYPE_KEYS: TigerTypeKey[] = TIGER_ROOT_MODES.flatMap(rootMode
   TIGER_PRACTICE_MODES.map(practiceMode => tigerTypeKey(rootMode, practiceMode))
 );
 
-/** 单个类型组合的练习状态 */
+/**
+ * 单个类型组合的练习状态。
+ *
+ * 这里**不含**错题集：错题是跨练习模式共享的（见 {@link TigerRootMode} 分桶），
+ * 否则在「普通」模式打错的字根永远不会出现在「错题」模式里，等于打错白打。
+ */
 export interface TigerTypeBucket {
   /** 已掌握的根下标 */
   completed: Set<number>;
@@ -73,10 +78,6 @@ export interface TigerTypeBucket {
   total: number;
   /** 答对次数 */
   correct: number;
-  /** 错题集 */
-  wrong: Set<number>;
-  /** 错题纠正进度 */
-  wrongProgress: Set<number>;
   /** 已完成轮数（皇冠） */
   rounds: number;
 }
@@ -87,18 +88,15 @@ export type TigerTypeBuckets = Record<TigerTypeKey, TigerTypeBucket>;
 /**
  * v2 快照中按类型组合分桶的部分。
  *
- * 除 `rs` / `rq`（复习相关，按字根模式分桶即可）外，其余字段均以
- * {@link TigerTypeKey} 为键，覆盖全部 10 种组合。
+ * `rs` / `rq`（复习相关）按字根模式分桶即可；`cs` / `st` / `rm` 以
+ * {@link TigerTypeKey} 为键，覆盖全部 10 种组合。错题集 `wb` / `wp`
+ * 同样按字根模式分桶，故留在快照顶层而非此处。
  */
 export interface TigerSnapshotBuckets {
   /** 已掌握根下标，键为类型组合键 */
   cs: Record<string, number[]>;
   /** 答题统计，键为类型组合键 */
   st: Record<string, [number, number]>;
-  /** 错题集，键为类型组合键 */
-  wb: Record<string, number[]>;
-  /** 错题纠正进度，键为类型组合键 */
-  wp: Record<string, number[]>;
   /** 完成轮数（皇冠），键为类型组合键 */
   rm: Record<string, number>;
   /**
@@ -127,9 +125,14 @@ export interface TigerCodeSnapshot {
   b?: TigerSnapshotBuckets;
   /** 已掌握的根下标集合（legacy v1 全字根进度，v2 快照不再写出） */
   cs?: number[];
-  /** 错题集：全字根 / 归并字根（legacy v1） */
+  /**
+   * 错题集：全字根 / 归并字根。
+   *
+   * v1 与 v2 共用这一形状：错题按字根模式分桶、由同字根下的 5 种练习模式共享，
+   * 不随 10 桶重构而改变，因此不必在 `b` 里另存一份。
+   */
   wb?: { a: number[]; m: number[] };
-  /** 错题纠正进度（legacy v1） */
+  /** 错题纠正进度，形状同 `wb` */
   wp?: { a: number[]; m: number[] };
   /** 间隔复习阶段，键为根下标（legacy v1，v2 见 `b.rs`） */
   rs?: Record<string, TigerReviewStage>;

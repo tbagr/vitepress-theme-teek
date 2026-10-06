@@ -37,13 +37,13 @@ import { TkCataloguePage } from "@teek/components/theme/page-catalogue";
 import { TkArticleOverviewPage } from "@teek/components/theme/page-article-overview";
 import { TkLoginPage, useWatchLogin } from "@teek/components/theme/page-login";
 import { TkRiskLinkPage, useRiskLink } from "@teek/components/theme/page-risk-link";
-import { TkWubi08Page } from "@teek/components/theme/page-08wubi";
-import { TkWubi86Page } from "@teek/components/theme/page-86wubi";
-import { TkTigerCodePage } from "@teek/components/theme/page-tiger-code";
 import { TkSidebarTrigger } from "@teek/components/theme/sidebar-trigger";
 import { TkHomeFeature } from "@teek/components/theme/home-feature";
 import { TkRouteLoading } from "@teek/components/theme/route-loading";
 import { TkArticleBanner } from "@teek/components/theme/article-banner";
+import { TkWubi08Page } from "@teek/components/pages/wubi-08";
+import { TkWubi86Page } from "@teek/components/pages/wubi-86";
+import { TkTigerCodePage } from "@teek/components/pages/tiger-code";
 
 defineOptions({ name: "TeekLayout" });
 

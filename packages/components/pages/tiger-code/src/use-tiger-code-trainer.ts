@@ -41,8 +41,6 @@ const createBuckets = (): TigerTypeBuckets =>
         completed: new Set<number>(),
         total: 0,
         correct: 0,
-        wrong: new Set<number>(),
-        wrongProgress: new Set<number>(),
         rounds: 0,
       },
     ])
@@ -111,10 +109,22 @@ export const useTigerCodeTrainer = (refs: {
   const locked = ref(false);
   const buffer = ref("");
   /**
-   * 10 种类型组合各自独立的进度 / 统计 / 错题 / 皇冠。
+   * 10 种类型组合各自独立的进度 / 统计 / 皇冠。
    * 键为 `${字根模式}:${练习模式}`，切换任意一种组合都不影响其余九种。
    */
   const buckets = ref<TigerTypeBuckets>(createBuckets());
+  /**
+   * 错题集与错题纠正进度，只按**字根模式**分桶。
+   *
+   * 刻意不参与 10 桶拆分：错题是「打错就收进来」的纠错清单，若按练习模式隔离，
+   * 在「普通」模式打错的字根不会出现在「错题」模式里，等于打错白打。同一字根模式下的
+   * 5 种练习模式共享一份，跨字根模式则因根下标含义不同必须分开。
+   */
+  const wrongByMode = ref<Record<TigerRootMode, Set<number>>>({ all: new Set<number>(), merged: new Set<number>() });
+  const wrongProgressByMode = ref<Record<TigerRootMode, Set<number>>>({
+    all: new Set<number>(),
+    merged: new Set<number>(),
+  });
   /**
    * 复习阶段与队列按字根模式分桶。
    *
@@ -156,8 +166,8 @@ export const useTigerCodeTrainer = (refs: {
   /** 当前「字根模式 × 练习模式」组合的状态桶 */
   const bucket = computed(() => buckets.value[tigerTypeKey(mode.value, practiceMode.value)]);
   const completedSet = computed(() => bucket.value.completed);
-  const wrongSet = computed(() => bucket.value.wrong);
-  const wrongProgressSet = computed(() => bucket.value.wrongProgress);
+  const wrongSet = computed(() => wrongByMode.value[mode.value]);
+  const wrongProgressSet = computed(() => wrongProgressByMode.value[mode.value]);
   const learningSeenSet = computed(() =>
     mode.value === "merged" ? learningSeenByMode.value.merged : learningSeenByMode.value.all
   );
@@ -639,12 +649,12 @@ export const useTigerCodeTrainer = (refs: {
     persist();
   };
 
-  /** 清空全部 10 种类型的错题与错题进度 */
+  /** 清空两种字根模式下的全部错题与错题进度 */
   const clearAllWrong = () => {
-    for (const key of TIGER_TYPE_KEYS) {
-      buckets.value[key].wrong.clear();
-      buckets.value[key].wrongProgress.clear();
-    }
+    wrongByMode.value.all.clear();
+    wrongByMode.value.merged.clear();
+    wrongProgressByMode.value.all.clear();
+    wrongProgressByMode.value.merged.clear();
     if (practiceMode.value === "wrong") renderQuestion();
     recomputeWrongProgress();
     persist();
@@ -663,23 +673,20 @@ export const useTigerCodeTrainer = (refs: {
 
   // ── 序列化 ────────────────────────────────────────────────────
   /**
-   * 输出 v2 快照：10 种类型的进度全部写进 `b`，顶层只保留跨类型共享的字段。
+   * 输出 v2 快照：10 种类型的进度 / 统计 / 皇冠写进 `b`，顶层保留跨类型共享的字段。
    *
-   * 不再写出 legacy 的 `cs` / `st` / `wb` / `wp` / `rm`，避免同一份数据出现两套表达
-   * 方式而产生歧义；旧快照由 `restore()` 的迁移分支负责读取。
+   * `cs` / `st` / `rm` 不再以 legacy 的扁平单份形式写出，避免同一份数据出现两套表达
+   * 而产生歧义；旧快照由 `restore()` 的迁移分支负责读取。错题 `wb` / `wp` 因为按字根
+   * 模式分桶、v1 与 v2 形状一致，仍留在顶层。
    */
   const serialize = (): TigerCodeSnapshot => {
     const cs: Record<string, number[]> = {};
     const st: Record<string, [number, number]> = {};
-    const wb: Record<string, number[]> = {};
-    const wp: Record<string, number[]> = {};
     const rm: Record<string, number> = {};
     for (const key of TIGER_TYPE_KEYS) {
       const b = buckets.value[key];
       cs[key] = [...b.completed];
       st[key] = [b.total, b.correct];
-      wb[key] = [...b.wrong];
-      wp[key] = [...b.wrongProgress];
       rm[key] = b.rounds;
     }
 
@@ -687,8 +694,6 @@ export const useTigerCodeTrainer = (refs: {
       b: {
         cs,
         st,
-        wb,
-        wp,
         rm,
         rs: {
           a: Object.fromEntries(reviewStateByMode.value.all) as Record<string, TigerReviewStage>,
@@ -699,6 +704,8 @@ export const useTigerCodeTrainer = (refs: {
           m: reviewQueueByMode.value.merged.map(entry => ({ ...entry })),
         },
       },
+      wb: { a: [...wrongByMode.value.all], m: [...wrongByMode.value.merged] },
+      wp: { a: [...wrongProgressByMode.value.all], m: [...wrongProgressByMode.value.merged] },
       t: turn.value,
       ls: { a: [...learningSeenByMode.value.all], m: [...learningSeenByMode.value.merged] },
       md: mode.value,
@@ -716,12 +723,26 @@ export const useTigerCodeTrainer = (refs: {
     for (const key of TIGER_TYPE_KEYS) {
       const b = buckets.value[key];
       b.completed.clear();
-      b.wrong.clear();
-      b.wrongProgress.clear();
       b.total = 0;
       b.correct = 0;
       b.rounds = 0;
     }
+    wrongByMode.value.all.clear();
+    wrongByMode.value.merged.clear();
+    wrongProgressByMode.value.all.clear();
+    wrongProgressByMode.value.merged.clear();
+  };
+
+  /**
+   * 读入错题集与纠正进度。
+   *
+   * v1 与 v2 的 `wb` / `wp` 形状一致（按字根模式分桶），故两个分支共用此函数。
+   */
+  const restoreWrong = (d: TigerCodeSnapshot) => {
+    (d.wb?.a ?? []).forEach(i => wrongByMode.value.all.add(i));
+    (d.wb?.m ?? []).forEach(i => wrongByMode.value.merged.add(i));
+    (d.wp?.a ?? []).forEach(i => wrongProgressByMode.value.all.add(i));
+    (d.wp?.m ?? []).forEach(i => wrongProgressByMode.value.merged.add(i));
   };
 
   /**
@@ -740,8 +761,6 @@ export const useTigerCodeTrainer = (refs: {
       for (const practiceMode of TIGER_PRACTICE_MODES) {
         const b = buckets.value[tigerTypeKey(rootMode, practiceMode)];
         (isMerged ? mergedCompleted : legacyCompleted).forEach(i => b.completed.add(i));
-        (isMerged ? (d.wb?.m ?? []) : (d.wb?.a ?? [])).forEach(i => b.wrong.add(i));
-        (isMerged ? (d.wp?.m ?? []) : (d.wp?.a ?? [])).forEach(i => b.wrongProgress.add(i));
         b.rounds = (isMerged ? d.rm?.m : d.rm?.a) ?? 0;
 
         const stats = d.st?.[practiceMode];
@@ -779,8 +798,6 @@ export const useTigerCodeTrainer = (refs: {
       for (const key of TIGER_TYPE_KEYS) {
         const b = buckets.value[key];
         (d.b.cs?.[key] ?? []).forEach(i => b.completed.add(i));
-        (d.b.wb?.[key] ?? []).forEach(i => b.wrong.add(i));
-        (d.b.wp?.[key] ?? []).forEach(i => b.wrongProgress.add(i));
         const stats = d.b.st?.[key];
         if (stats) {
           b.total = stats[0] ?? 0;
@@ -799,6 +816,9 @@ export const useTigerCodeTrainer = (refs: {
     } else {
       migrateLegacy(d);
     }
+
+    // 错题按字根模式分桶，v1 / v2 形状一致，两个分支共用
+    restoreWrong(d);
 
     turn.value = d.t ?? 0;
 
