@@ -14,7 +14,7 @@ export const teekConfig = defineTeekConfig({
   author: { name: "Tbagr", link: "https://github.com/tbagr" },
   blogger: {
     name: "芙宁娜西妲",
-    slogan: "再见，那维莱特。希望你喜欢这五百年来属于你的戏份！",
+    slogan: "再见了，那维莱特。希望你喜欢这五百年来属于你的戏份！",
     avatar: "https://www.tbagr.com/teek-logo-large.png",
     shape: "circle-rotate",
     circleBgImg: "/blog/bg4.webp",

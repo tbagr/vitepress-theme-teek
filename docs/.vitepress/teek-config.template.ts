@@ -186,7 +186,7 @@ export const teekConfig = defineTeekConfig({
   // 博主信息，显示在首页左边第一个卡片。
   blogger: {
     name: "芙宁娜西妲", // 博主昵称
-    slogan: "再见，那维莱特。希望你喜欢这五百年来属于你的戏份！", // 博主签名
+    slogan: "再见了，那维莱特。希望你喜欢这五百年来属于你的戏份！", // 博主签名
     avatar: "https://www.tbagr.com/teek-logo-large.png", // 博主头像
     shape: "circle-rotate", // 头像风格：square 为方形头像，circle 为圆形头像，circle-rotate 可支持鼠标悬停旋转，circle-rotate-last 将会持续旋转 59s
     circleBgImg: "/blog/bg4.webp", // 背景图片
@@ -241,7 +241,7 @@ export const teekConfig = defineTeekConfig({
     list: [
       {
         name: "Tbagr",
-        desc: "再见，那维莱特。希望你喜欢这五百年来属于你的戏份！",
+        desc: "再见了，那维莱特。希望你喜欢这五百年来属于你的戏份！",
         avatar: "https://www.tbagr.com/teek-logo-large.png",
         link: "http://tbagr.com/",
       },

@@ -7,7 +7,7 @@ tk:
 hero:
   name: Tbagr
   text: 芙宁娜西妲
-  tagline: ✨ 再见，那维莱特。希望你喜欢这五百年来属于你的戏份！
+  tagline: ✨ 再见了，那维莱特。希望你喜欢这五百年来属于你的戏份！
   actions:
     - theme: brand
       text: 开始
