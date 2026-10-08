@@ -530,6 +530,10 @@
     transition:
       opacity 160ms ease,
       transform 160ms ease;
+
+    .size-btn {
+      padding: 11px;
+    }
   }
 
   // 学习模式不显示准确率
@@ -552,11 +556,9 @@
   }
 
   .stat-crown {
-    margin-top: 2px;
     font-size: 18px;
     line-height: 1;
     color: var(--accent);
-    flex-basis: 100%;
 
     &.is-empty {
       display: none;
@@ -564,8 +566,6 @@
   }
 
   .stat-timer {
-    flex-basis: 100%;
-    margin-top: 2px;
   }
 
   .stat strong {
@@ -581,19 +581,21 @@
 
   .mode-switch {
     display: inline-flex;
-    gap: 4px;
-    padding: 3px;
+    gap: 2px;
+    padding: 2px;
     border-radius: 999px;
     border: 1px solid var(--ui-border);
     background: var(--ui-surface);
   }
 
   .mode-btn {
+    display: inline-flex;
+    padding: 8px;
+    font-size: 13px;
+    line-height: 1;
     border: none;
     background: transparent;
-    padding: 4px 10px;
     border-radius: 999px;
-    font-size: 12px;
     color: var(--ui-text);
     cursor: pointer;
     transition:
@@ -612,12 +614,13 @@
     display: inline-flex;
     gap: 8px;
     align-items: center;
+    line-height: 1;
   }
 
   .size-btn {
     border: 1px solid var(--ui-border);
     background: var(--btn-surface);
-    border-radius: 10px;
+    border-radius: 999px;
     padding: 4px 10px;
     font-size: 12px;
     color: var(--ui-text-active);
@@ -644,7 +647,7 @@
   .palette-select select {
     border: 1px solid var(--ui-border);
     background: var(--btn-surface);
-    border-radius: 10px;
+    border-radius: 999px;
     padding: 4px 10px;
     font-size: 12px;
     color: var(--ui-text-active);
@@ -1086,19 +1089,12 @@
       flex-wrap: wrap;
     }
 
-    /* 移动端加大点按目标，方便手指操作 */
-    .mode-btn {
-      padding: 8px 12px;
-      font-size: 13px;
-    }
-
     .size-btn {
-      padding: 8px 12px;
+      padding: 8px;
       font-size: 13px;
     }
 
     .palette-select select {
-      padding: 8px 12px;
       font-size: 13px;
     }
 

@@ -175,12 +175,12 @@ const onIdKeydown = (event: KeyboardEvent) => {
             进度：
             <strong>{{ trainer.progressText.value }}</strong>
           </div>
-          <div class="stat stat-crown" :class="{ 'is-empty': !trainer.crownText.value }">
-            {{ trainer.crownText.value }}
-          </div>
           <div class="stat stat-timer">
             计时：
             <strong>{{ trainer.timerText.value }}</strong>
+          </div>
+          <div class="stat stat-crown" :class="{ 'is-empty': !trainer.crownText.value }">
+            {{ trainer.crownText.value }}
           </div>
           <div class="stat stat-wrong">
             错题进度：
