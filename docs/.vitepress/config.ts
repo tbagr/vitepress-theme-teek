@@ -100,35 +100,20 @@ export default defineConfig({
     },
     nav: [
       { text: "首页", link: "/" },
+      { text: "刷机", link: "/flash-rom/ota-root", activeMatch: "/101.刷机/" },
       {
         text: "五笔",
         items: [
-          {
-            text: "五笔86",
-            link: "/86wubi",
-          },
-          {
-            text: "五笔08",
-            link: "/08wubi",
-          },
-          {
-            text: "虎码",
-            link: "/tiger-code",
-          },
+          { text: "虎码", link: "/tiger-code" },
+          { text: "五笔86", link: "/86wubi" },
+          { text: "五笔08", link: "/08wubi" },
         ],
       },
       {
         text: "文档",
         items: [
-          {
-            text: "首页(旧​)",
-            link: "/home",
-          },
-          {
-            text: "指南",
-            link: "/guide/intro",
-            activeMatch: "/01.指南/",
-          },
+          { text: "首页(旧​)", link: "/home" },
+          { text: "指南", link: "/guide/intro", activeMatch: "/01.指南/" },
           { text: "配置", link: "/reference/config", activeMatch: "/10.配置/" },
           { text: "开发", link: "/develop/intro", activeMatch: "/15.主题开发/" },
           {
